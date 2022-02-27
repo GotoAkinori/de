@@ -1,0 +1,122 @@
+html body {
+    box-sizing: border-box;
+    background-color: #222;
+    color: white;
+}
+
+div {
+    box-sizing: border-box;
+}
+
+:root {
+    --toolbar-height: 40px;
+    --property-view-width: 300px;
+}
+
+.pane {
+    position: absolute;
+    border: 2px solid #66A;
+}
+
+#toolbar {
+    background-color: #224;
+    left: 0px;
+    top: 0px;
+    right: var(--property-view-width);
+    height: var(--toolbar-height);
+}
+
+#toolbar button {
+    background-color: transparent;
+    color: white;
+    padding: 5px;
+    margin: 2px;
+}
+
+#toolbar button:hover {
+    background-color: #448;
+}
+
+#toolbar img {
+    background-color: transparent;
+}
+
+#formatBody {
+    left: 0px;
+    top: var(--toolbar-height);
+    right: var(--property-view-width);
+    bottom: 0px;
+}
+
+#propertyView {
+    left: calc(100% - var(--property-view-width));
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    padding: 5px;
+}
+
+#propertyView input {
+    background-color: #000;
+    border: none;
+    border-bottom: solid #FFF 1px;
+    color: #FFF;
+}
+
+.toolbutton {
+    background-color: transparent;
+    border: 1px solid #88A;
+    margin: 2px;
+}
+
+.toolbutton:hover {
+    background-color: #448;
+}
+
+.prop-base {
+    padding: 10px 0px;
+}
+
+.prop-header {
+    border-top: solid #88A 2px;
+    border-bottom: solid #88A 2px;
+    font-weight: bold;
+    font-size: 20px;
+    color: white;
+    box-sizing: border-box;
+    padding: 2px 2px 2px 10px;
+}
+
+.prop-body {
+    padding: 5px;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.prop-body.shrink {
+    height: 10px;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.prop-header button {
+    background-color: transparent;
+    border: 1px #AAF solid;
+    margin: 5px;
+    height: 22px;
+    padding: 2px;
+    color: #AAF;
+}
+
+.prop-header button:hover {
+    background-color: #66C;
+}
+
+.prop-header button.open {
+    padding: 5px;
+    float: right;
+}
+
+.prop-body div.property-name {
+    margin: 10px 0px 0px 0px;
+}

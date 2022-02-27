@@ -1,0 +1,21 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "properties": {
+        "url": {
+            "description": "URL of the server",
+            "type": "string"
+        },
+        "port": {
+            "description": "Port number of the server",
+            "type": "number"
+        },
+        "clientRoot": {
+            "description": "Root path of client application",
+            "type": "string"
+        }
+    },
+    "required": [
+        "url",
+        "clientRoot"
+    ]
+}

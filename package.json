@@ -1,0 +1,20 @@
+{
+  "name": "doceditor2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server/js/svmain.js",
+  "scripts": {
+    "sv": "nodemon server/js/svmain.js -devmode -something 1",
+    "wc": "tsc -w -p tsconfig-client.json",
+    "ws": "tsc -w -p tsconfig-server.json"
+  },
+  "author": "Goto Akinori",
+  "license": "MIT",
+  "dependencies": {
+    "@types/express": "^4.17.8",
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  }
+}
