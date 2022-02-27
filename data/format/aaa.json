@@ -1,1 +1,0 @@
-{"html":"test<div><div>&nbsp;&nbsp;<input data-detype=\"input\" name=\"test\"></div></div><div>&nbsp;&nbsp;<input data-detype=\"input\" name=\"test1\"></div>","properties":{"test":{"name":"test","property":{"default":"aaa","placeholder":"bbb"}},"test1":{"name":"test1","property":{"default":"bbbt","placeholder":"ddd"}}}}
