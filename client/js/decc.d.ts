@@ -31,8 +31,10 @@ declare namespace ooo.de.common {
     function addButton(parent: HTMLElement, caption: string, callback: () => void, className?: string): HTMLButtonElement;
     function checkIsChild(parent: Node, child: Node): boolean;
     function modal(): [HTMLDivElement, HTMLDivElement];
+    function newName(): string;
 }
 declare namespace ooo.de.common {
+    function post(url: string, data?: any): Promise<string>;
     function postJson(url: string, data?: any): Promise<any>;
 }
 declare namespace ooo.de.element {
@@ -69,6 +71,24 @@ declare namespace ooo.de.element {
         code: string;
         constructor(type: string, code: string);
         getMessage(): string;
+    }
+}
+declare namespace ooo.de.element {
+    class DeCommandButtonFactory extends DEEFactroyBase<DeCommandButton> {
+        getType(): string;
+        loadElement(element: HTMLElement, data: any): DeCommandButton;
+        propContainer?: element.DEEPropertyBox;
+        makeToolButton(toolbutton: HTMLButtonElement): void;
+        createElement(range: Range): DeCommandButton;
+    }
+    class DeCommandButton extends DEEElementBase {
+        propertyRoot: DEEPropertyRoot | null;
+        getFormProperty(): any;
+        setFormProperty(element: HTMLElement, data: any): void;
+        getFormData(): any;
+        setFormData(data: any): void;
+        deleteElement(): void;
+        showProperty(pane: HTMLDivElement): DEEPropertyRoot;
     }
 }
 declare namespace ooo.de.element {
@@ -114,6 +134,17 @@ declare namespace ooo.de.element {
     class DEEPropertyItemString extends DEEPropertySet {
         input: HTMLInputElement;
         constructor(parent: DEEPropertySet, name: string, data: any, caption?: string, description?: string, onChange?: (value: string) => void);
+        setValue(value: string): void;
+        getValue(): string;
+        getBody(): HTMLDivElement;
+    }
+    class DEEPropertyItemSelect extends DEEPropertySet {
+        select: HTMLSelectElement;
+        constructor(parent: DEEPropertySet, name: string, data: any, options: (string | {
+            value: string;
+            caption: string;
+            tooltip: string;
+        })[], caption?: string, description?: string, onChange?: (value: string) => void);
         setValue(value: string): void;
         getValue(): string;
         getBody(): HTMLDivElement;

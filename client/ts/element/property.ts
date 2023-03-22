@@ -47,10 +47,10 @@ namespace ooo.de.element {
                 open = !open;
                 if (open) {
                     this.body.classList.remove("shrink");
-                    openButton.innerText = "▼";
+                    openButton.innerText = "▲";
                 } else {
                     this.body.classList.add("shrink");
-                    openButton.innerText = "▲";
+                    openButton.innerText = "▼";
                 }
             }, "open");
 
@@ -88,6 +88,57 @@ namespace ooo.de.element {
         }
         public getValue(): string {
             return this.input.value;
+        }
+        public getBody(): HTMLDivElement {
+            throw new Error("Method not implemented.");
+        }
+    }
+
+    export class DEEPropertyItemSelect extends DEEPropertySet {
+        select: HTMLSelectElement;
+        public constructor(parent: DEEPropertySet, name: string, data: any, options: (string | { value: string, caption: string, tooltip: string })[], caption?: string, description?: string, onChange?: (value: string) => void) {
+            super();
+
+            let div = common.addTag(parent.getBody(), "div", "property-name");
+            div.innerText = caption ?? name;
+            if (description) { div.title = description; }
+            parent.propertyItems[name] = this;
+
+            this.select = common.addTag(parent.getBody(), "select");
+            this.select.style.marginLeft = "10px";
+            this.select.value = data ? data[name] ?? "" : "";
+            this.select.addEventListener("change", () => {
+                data[name] = this.select.value;
+                if (onChange) {
+                    onChange(this.select.value);
+                }
+            });
+
+            for (let option of options) {
+                let value: string;
+                let caption: string;
+                let tooltip: string;
+                if (typeof (option) == "string") {
+                    value = option;
+                    caption = option;
+                    tooltip = option;
+                } else {
+                    value = option.value;
+                    caption = option.caption;
+                    tooltip = option.tooltip;
+                }
+
+                let optionElement = common.addTag(this.select, "option");
+                optionElement.value = value;
+                optionElement.title = tooltip;
+                optionElement.innerText = caption;
+            }
+        }
+        public setValue(value: string) {
+            this.select.value = value;
+        }
+        public getValue(): string {
+            return this.select.value;
         }
         public getBody(): HTMLDivElement {
             throw new Error("Method not implemented.");

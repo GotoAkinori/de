@@ -19,9 +19,9 @@ function commandSave(format: string, data: any): Promise<void> {
     return new Promise((res, rej) => {
         fs.writeFile(`./data/format/${format}.json`, JSON.stringify(data), {}, e => {
             if (e?.errno) {
-                res();
-            } else {
                 rej(e);
+            } else {
+                res();
             }
         });
     });

@@ -4,6 +4,7 @@ namespace ooo.de.formatEditor {
     //#region Make Format
     export function init_format() {
         AddDEE(new element.DeInputFactory());
+        AddDEE(new element.DeCommandButtonFactory());
 
         element.DEEFactroyBase.onActive = onActive;
         document.getElementById("menubutton")!.addEventListener("click", showMenu);
@@ -80,7 +81,12 @@ namespace ooo.de.formatEditor {
         input.placeholder = "Format Name";
         input.focus();
         common.addButton(base, "Save", async () => {
-            await save(input.value);
+            try {
+                await save(input.value);
+                back.remove();
+            } catch (ex) {
+                console.error(ex);
+            }
         });
     }
 
@@ -91,10 +97,13 @@ namespace ooo.de.formatEditor {
             properties: {} as { [key: string]: any }
         };
         for (let elem of element.DEEElementBase.elementList) {
-            data.properties[elem.name] = elem.getFormProperty();
+            data.properties[elem.propertyData.name] = elem.getFormProperty();
         }
-
-        common.postJson("../command/format/save/" + formatName, data);
+        try {
+            common.post("../command/format/save/" + formatName, data);
+        } catch (ex) {
+            console.error(ex);
+        }
     }
 
     async function showLoadDialog() {
@@ -120,13 +129,23 @@ namespace ooo.de.formatEditor {
                 selectedFormatName = formatName;
                 loadButton.disabled = false;
             });
-            listItem.addEventListener("dblclick", () => {
-                load(formatName);
+            listItem.addEventListener("dblclick", async () => {
+                try {
+                    await load(formatName);
+                    back.remove();
+                } catch (ex) {
+                    console.error(ex);
+                }
             });
         }
 
-        let loadButton = common.addButton(base, "Load", () => {
-            load(selectedFormatName);
+        let loadButton = common.addButton(base, "Load", async () => {
+            try {
+                await load(selectedFormatName);
+                back.remove();
+            } catch (ex) {
+                console.error(ex);
+            }
         });
         loadButton.disabled = true;
     }

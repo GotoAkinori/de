@@ -3,7 +3,7 @@ namespace ooo.de.element {
         public getType() { return "input"; }
         public loadElement(element: HTMLElement, data: any): DeInput {
             let deInput: DeInput = new DeInput(this, element, data);
-            (element as HTMLInputElement).value = data.property.default;
+            (element as HTMLInputElement).value = data.property.default ?? "";
 
             element.addEventListener("focus", () => {
                 DEEFactroyBase.onActive(deInput);
@@ -31,6 +31,9 @@ namespace ooo.de.element {
                 deInput.propertyData.property = {};
             }
             deInput.propertyData.property.defaultValue = valueElementPair.value;
+            let elementName = common.newName();
+            deInput.propertyData.name = elementName;
+            (valueElementPair.element as HTMLInputElement).name = elementName;
 
             valueElementPair.element.addEventListener("focus", () => {
                 DEEFactroyBase.onActive(deInput);
@@ -73,10 +76,12 @@ namespace ooo.de.element {
                 this.name = v;
             });
             let property = new element.DEEPropertyBox(this.propertyRoot, "property", "Property");
-            new element.DEEPropertyItemString(property, "default", this.propertyData.property, "Default Value", "Default value of the text box", v => {
+            new element.DEEPropertyItemString(property, "defaultValue", this.propertyData.property, "Default Value", "Default value of the text box", v => {
                 (this.element as HTMLInputElement).value = v;
             });
-            new element.DEEPropertyItemString(property, "placeholder", this.propertyData.property, "Placeholder", "Placeholder of the text box");
+            new element.DEEPropertyItemString(property, "placeholder", this.propertyData.property, "Placeholder", "Placeholder of the text box", v => {
+                (this.element as HTMLInputElement).placeholder = v;
+            });
 
             return this.propertyRoot;
         }

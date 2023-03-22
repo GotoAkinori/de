@@ -108,5 +108,14 @@ namespace ooo.de.common {
         return [base, back];
     }
 
+    export function newName(): string {
+        for (let i = 1; true; i++) {
+            let element = document.querySelector(`*[name='#${i}']`);
+            if (element == null) {
+                return `#${i}`;
+            }
+        }
+    }
+
     //#endregion
 }

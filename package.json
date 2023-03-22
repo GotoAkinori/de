@@ -6,7 +6,8 @@
   "scripts": {
     "sv": "nodemon server/js/svmain.js -devmode -something 1",
     "wc": "tsc -w -p tsconfig-client.json",
-    "ws": "tsc -w -p tsconfig-server.json"
+    "ws": "tsc -w -p tsconfig-server.json",
+    "su": "setup.bat"
   },
   "author": "Goto Akinori",
   "license": "MIT",

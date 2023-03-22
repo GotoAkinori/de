@@ -22,7 +22,7 @@
 }
 
 .menu-item:hover {
-    border: 1px solid #448;
+    background-color: #448;
 }
 
 .menu-item.selected {

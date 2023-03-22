@@ -7,13 +7,21 @@ let application = express();
 application.use(express.json());
 application.use(express.urlencoded({ extended: true }));
 application.use(conf.url + "/command/:type/:action/:format", async (req, res) => {
-    let result: any;
-    switch (req.params.type) {
-        case "format": {
-            result = await commandFormat.command(req.params.action, req.params.format, req.body);
-        } break;
+    try {
+        let result: any;
+        switch (req.params.type) {
+            case "format": {
+                result = await commandFormat.command(req.params.action, req.params.format, req.body);
+            } break;
+        }
+        res.send(result);
+    } catch (ex) {
+        res.sendStatus(500);
+        res.setHeader("Content-Type", "application/json");
+        res.send({
+            message: ex
+        });
     }
-    res.send(result);
 });
 application.use(conf.url, express.static(conf.clientRoot));
 

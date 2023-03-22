@@ -39,40 +39,58 @@ namespace ooo.de.element {
             element: HTMLElement
         } {
             // Check the range condition
-            if (range.startContainer != range.endContainer
-                || range.startContainer.nodeType != Node.TEXT_NODE) {
+            if (range.startContainer == range.endContainer) {
+                if (range.startContainer.nodeType == Node.TEXT_NODE) {
+                    let target = range.startContainer;
+                    let parent = target.parentNode!;
+                    let doc = target.ownerDocument!;
+
+                    let value = target.textContent?.substring(range.startOffset, range.endOffset) ?? "";
+                    let element = create(value, doc);
+
+                    let start = range.startOffset;
+                    let end = range.endOffset;
+
+                    parent.insertBefore(
+                        doc.createTextNode(target.textContent?.substring(0, start) ?? ""),
+                        target
+                    );
+                    parent.insertBefore(
+                        element,
+                        target
+                    );
+                    parent.insertBefore(
+                        doc.createTextNode(target.textContent?.substring(end) ?? ""),
+                        target
+                    );
+                    parent.removeChild(target);
+
+                    return {
+                        value: value,
+                        element: element
+                    };
+                } else {
+                    let parent = range.startContainer!;
+                    let doc = parent.ownerDocument!;
+
+                    let value = "";
+                    let element = create(value, doc);
+
+                    let start = range.startOffset;
+
+                    parent.insertBefore(
+                        element,
+                        parent.childNodes.item(start + 1)
+                    );
+
+                    return {
+                        value: value,
+                        element: element
+                    };
+                }
+            } else {
                 throw this.newError("Create Error");
             }
-
-            let target = range.startContainer;
-            let parent = target.parentNode!;
-            let start: number, end: number;
-            let doc = target.ownerDocument!;
-
-            let value = target.textContent?.substring(range.startOffset, range.endOffset) ?? "";
-            let element = create(value, doc);
-
-            start = range.startOffset;
-            end = range.endOffset;
-
-            parent.insertBefore(
-                doc.createTextNode(target.textContent?.substring(0, range.startOffset) ?? ""),
-                target
-            );
-            parent.insertBefore(
-                element,
-                target
-            );
-            parent.insertBefore(
-                doc.createTextNode(target.textContent?.substring(range.endOffset) ?? ""),
-                target
-            );
-            parent.removeChild(target);
-
-            return {
-                value: value,
-                element: element
-            };
         }
 
         //#endregion
