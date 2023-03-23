@@ -1,8 +1,10 @@
 namespace ooo.de.formatEditor {
     export let DeeList: element.DEEFactroyBase<any>[] = [];
+    export let pageMode: "view" | "format";
 
     //#region Make Format
     export function init_format() {
+        pageMode = "format";
         AddDEE(new element.DeInputFactory());
         AddDEE(new element.DeCommandButtonFactory());
 
@@ -24,21 +26,24 @@ namespace ooo.de.formatEditor {
      * @param factory New DEEBase element.
      */
     function AddDEE(factory: element.DEEFactroyBase<any>) {
-        let toolbarPane = document.getElementById("toolbar") as HTMLDivElement;
-        let formatBody = document.getElementById("formatBody") as HTMLDivElement;
-
         DeeList.push(factory);
-        factory.makeToolButton(common.addButton(toolbarPane, "", () => {
-            let selection = document.getSelection();
 
-            if (selection && selection.rangeCount > 0) {
-                let target = selection.getRangeAt(0).startContainer;
+        if (pageMode == "format") {
+            let toolbarPane = document.getElementById("toolbar") as HTMLDivElement;
+            let formatBody = document.getElementById("formatBody") as HTMLDivElement;
 
-                if (common.checkIsChild(formatBody, target)) {
-                    let data = factory.createElement(selection.getRangeAt(0));
+            factory.makeToolButton(common.addButton(toolbarPane, "", () => {
+                let selection = document.getSelection();
+
+                if (selection && selection.rangeCount > 0) {
+                    let target = selection.getRangeAt(0).startContainer;
+
+                    if (common.checkIsChild(formatBody, target)) {
+                        let data = factory.createElement(selection.getRangeAt(0));
+                    }
                 }
-            }
-        }, "toolbutton"));
+            }, "toolbutton"));
+        }
     }
 
     function onActive(element: element.DEEElementBase) {
@@ -167,9 +172,76 @@ namespace ooo.de.formatEditor {
     }
     //#endregion
 
-    //#region 
+    //#region View
+    function urlArgs(): { [key: string]: string } {
+        let ret: { [key: string]: string } = {};
 
+        let searchString = location.search.replace("?", "");
+        for (let [key, value] of searchString.split("&").map(v => v.split("=").map(a => decodeURIComponent(a)))) {
+            ret[key] = value;
+        }
 
+        return ret;
+    }
+
+    let params: { [key: string]: string; };
+    export async function init_viewer() {
+        params = urlArgs();
+        pageMode = "view";
+
+        AddDEE(new element.DeInputFactory());
+        AddDEE(new element.DeCommandButtonFactory());
+
+        element.DEEFactroyBase.onActive = () => { };
+
+        let data = await common.postJson("../command/format/load/" + params.format);
+
+        let formatBody = document.getElementById("formatBody") as HTMLDivElement;
+        formatBody.innerHTML = data.html;
+        let properties = data.properties;
+
+        for (let name in properties) {
+            let element: HTMLElement | null = formatBody.querySelector(`*[name='${name}']`);
+            if (element) {
+                let defactory = DeeList.find(e => e.getType() == element!.dataset.detype);
+                defactory?.loadElement(element, properties[name]);
+            }
+        }
+
+        if (params.id) {
+            try {
+                let data = await common.postJson(`../command/form/${params.format}/load/${params.id}`, properties);
+
+                for (let elem of element.DEEElementBase.elementList) {
+                    elem.setFormData(data[elem.propertyData.name]);
+                    if (params.readonly) {
+                        elem.setReadonly();
+                    }
+                }
+            } catch (ex) {
+                console.error(ex);
+            }
+        }
+    }
+
+    export function submit() {
+        let properties: { [key: string]: any } = {};
+        for (let elem of element.DEEElementBase.elementList) {
+            properties[elem.propertyData.name] = elem.getFormData();
+        }
+
+        try {
+            common.post(`../command/form/${params.format}/create/`, properties);
+        } catch (ex) {
+            console.error(ex);
+        }
+    }
+
+    export function clear() {
+        for (let elem of element.DEEElementBase.elementList) {
+            elem.setFormData(undefined);
+        }
+    }
 
     //#endregion
 }

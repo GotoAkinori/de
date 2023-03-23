@@ -15,9 +15,10 @@ namespace ooo.de.element {
         public abstract getFormProperty(): any;
         public abstract setFormProperty(element: HTMLElement, data: any): void;
 
-        // Functions for "Edit Mode"
+        // Functions for "View Mode"
         public abstract getFormData(): any;
         public abstract setFormData(data: any): void;
+        public abstract setReadonly(): void;
     }
 
     export abstract class DEEFactroyBase<element extends DEEElementBase>  {

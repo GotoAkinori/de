@@ -3,10 +3,12 @@ namespace ooo.de.element {
         public getType() { return "input"; }
         public loadElement(element: HTMLElement, data: any): DeInput {
             let deInput: DeInput = new DeInput(this, element, data);
-            (element as HTMLInputElement).value = data.property.default ?? "";
+            (element as HTMLInputElement).value = data.property.defaultValue ?? "";
 
             element.addEventListener("focus", () => {
-                DEEFactroyBase.onActive(deInput);
+                if (formatEditor.pageMode == "format") {
+                    DEEFactroyBase.onActive(deInput);
+                }
             });
             deInput.name = data.name;
 
@@ -58,7 +60,7 @@ namespace ooo.de.element {
             return (this.element as HTMLInputElement).value;
         }
         public setFormData(data: any): void {
-            (this.element as HTMLInputElement).value = data;
+            (this.element as HTMLInputElement).value = data ?? this.propertyData.defaultValue ?? "";
         }
         public deleteElement(): void {
             throw new Error("Method not implemented.");
@@ -84,6 +86,10 @@ namespace ooo.de.element {
             });
 
             return this.propertyRoot;
+        }
+        
+        public setReadonly(): void {
+            (this.element as HTMLInputElement).setAttribute("readonly", "readonly");
         }
     }
 }

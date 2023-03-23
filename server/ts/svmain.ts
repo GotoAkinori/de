@@ -1,26 +1,51 @@
 import express from "express";
 import * as commandFormat from "./command-format";
+import * as commandForm from "./command-form";
 const conf = require("../../config/server.json");
 
 let application = express();
 
 application.use(express.json());
 application.use(express.urlencoded({ extended: true }));
-application.use(conf.url + "/command/:type/:action/:format", async (req, res) => {
+application.use(conf.url + "/command/format/save/:format", async (req, res) => {
     try {
-        let result: any;
-        switch (req.params.type) {
-            case "format": {
-                result = await commandFormat.command(req.params.action, req.params.format, req.body);
-            } break;
-        }
-        res.send(result);
+        await commandFormat.commandSave(req.params.format, req.body);
+        res.send();
     } catch (ex) {
         res.sendStatus(500);
-        res.setHeader("Content-Type", "application/json");
-        res.send({
-            message: ex
-        });
+        res.send({ message: ex });
+    }
+});
+application.use(conf.url + "/command/format/load/:format", async (req, res) => {
+    try {
+        res.send(await commandFormat.commandLoad(req.params.format));
+    } catch (ex) {
+        res.sendStatus(500);
+        res.send({ message: ex });
+    }
+});
+application.use(conf.url + "/command/format/list/", async (req, res) => {
+    try {
+        res.send(await commandFormat.commandList());
+    } catch (ex) {
+        res.sendStatus(500);
+        res.send({ message: ex });
+    }
+});
+application.use(conf.url + "/command/form/:format/create/", async (req, res) => {
+    try {
+        res.send(await commandForm.commandCreate(req.params.format, req.body));
+    } catch (ex) {
+        res.sendStatus(500);
+        res.send({ message: ex });
+    }
+});
+application.use(conf.url + "/command/form/:format/load/:id", async (req, res) => {
+    try {
+        res.send(await commandForm.commandLoad(req.params.format, req.params.id, req.body));
+    } catch (ex) {
+        res.sendStatus(500);
+        res.send({ message: ex });
     }
 });
 application.use(conf.url, express.static(conf.clientRoot));

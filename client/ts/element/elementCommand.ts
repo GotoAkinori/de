@@ -5,8 +5,12 @@ namespace ooo.de.element {
             let deButton: DeCommandButton = new DeCommandButton(this, element, data);
             (element as HTMLButtonElement).innerText = data.property.text;
 
-            element.addEventListener("focus", () => {
-                DEEFactroyBase.onActive(deButton);
+            element.addEventListener("click", () => {
+                if (formatEditor.pageMode == "format") {
+                    DEEFactroyBase.onActive(deButton);
+                } else if (formatEditor.pageMode == "view") {
+                    this.command[data.property.command]();
+                }
             });
             deButton.name = data.name;
 
@@ -20,7 +24,7 @@ namespace ooo.de.element {
 
         public createElement(range: Range): DeCommandButton {
             let valueElementPair = this.createSimpleElement(range, (value, doc) => {
-                let element = doc.createElement("button");
+                let element: HTMLButtonElement = doc.createElement("button");
                 element.innerText = value || "button";
                 element.dataset.detype = this.getType();
                 element.style.userSelect = "none";
@@ -42,6 +46,15 @@ namespace ooo.de.element {
 
             return deButton;
         }
+
+        private command: { [name: string]: () => void } = {
+            submit: function () {
+                formatEditor.submit();
+            },
+            clear: function () {
+                formatEditor.clear();
+            }
+        }
     }
 
     export class DeCommandButton extends DEEElementBase {
@@ -56,11 +69,9 @@ namespace ooo.de.element {
             throw new Error("Method not implemented.");
         }
         public getFormData(): any {
-            return (this.element as HTMLInputElement).value;
+            return undefined;
         }
-        public setFormData(data: any): void {
-            (this.element as HTMLInputElement).value = data;
-        }
+        public setFormData(data: any): void { }
         public deleteElement(): void {
             throw new Error("Method not implemented.");
         }
@@ -91,6 +102,10 @@ namespace ooo.de.element {
                 });
 
             return this.propertyRoot;
+        }
+
+        public setReadonly(): void {
+            (this.element as HTMLButtonElement).setAttribute("hidden", "hidden");
         }
     }
 }

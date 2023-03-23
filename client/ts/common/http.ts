@@ -4,7 +4,11 @@ namespace ooo.de.common {
             let xhr = new XMLHttpRequest();
             xhr.open("POST", url);
             xhr.addEventListener("load", () => {
-                res(xhr.responseText);
+                if (xhr.status == 200) {
+                    res(xhr.responseText);
+                } else {
+                    rej(xhr);
+                }
             });
             xhr.addEventListener("error", (err) => {
                 rej(err);

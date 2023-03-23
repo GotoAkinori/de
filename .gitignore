@@ -2,3 +2,4 @@
 /data/format/*.json
 package-lock.json
 /**/js/
+data
