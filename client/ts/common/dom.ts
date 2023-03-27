@@ -18,6 +18,12 @@ namespace ooo.de.common {
         return element;
     }
 
+    export function addTextDiv(parent: HTMLElement, text: string, className?: string): HTMLDivElement {
+        let div = addTag(parent, "div", className);
+        div.innerText = text;
+        return div;
+    }
+
     /**
      * Insert new HTML element.
      * @param target Target element of new element. New element is insert before this.
@@ -36,13 +42,6 @@ namespace ooo.de.common {
 
         return element;
     }
-
-    export function addTextDiv(parent: HTMLElement, text: string, className?: string): HTMLDivElement {
-        let div = addTag(parent, "div", className);
-        div.innerText = text;
-        return div;
-    }
-
 
     /**
      * Insert new HTML element.
@@ -77,6 +76,19 @@ namespace ooo.de.common {
         return button;
     }
 
+    export function addTR(
+        parent: HTMLTableElement | HTMLTableSectionElement,
+        columns: number, trClassName?: string, tdClassName?: string
+    ): [HTMLTableRowElement, HTMLTableCellElement[]] {
+        let tr = addTag(parent, "tr", trClassName);
+        let tds: HTMLTableCellElement[] = [];
+        for (let i = 0; i < columns; i++) {
+            tds.push(addTag(tr, "td", tdClassName));
+        }
+
+        return [tr, tds];
+    }
+
     //#endregion
 
     //#region Others
@@ -108,11 +120,26 @@ namespace ooo.de.common {
         return [base, back];
     }
 
-    export function newName(): string {
+    export function newID(): string {
         for (let i = 1; true; i++) {
-            let element = document.querySelector(`*[name='#${i}']`);
+            let element = document.querySelector(`*[deid='#${i}']`);
             if (element == null) {
                 return `#${i}`;
+            }
+        }
+    }
+
+    export function objectToDataset(element: HTMLElement, properties: { [key: string]: any }) {
+        for (let key in properties) {
+            element.dataset["de_" + key] = properties[key];
+        }
+    }
+
+    export function datasetToObject(element: HTMLElement, properties: { [key: string]: string }) {
+        for (let key in element.dataset) {
+            if (key.startsWith("de_")) {
+                let key2 = key.substring(3);
+                properties[key2] = element.dataset[key] ?? "";
             }
         }
     }

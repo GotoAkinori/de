@@ -1,18 +1,18 @@
 namespace ooo.de.element {
     export class DeCommandButtonFactory extends DEEFactroyBase<DeCommandButton> {
         public getType() { return "commandbutton"; }
-        public loadElement(element: HTMLElement, data: any): DeCommandButton {
-            let deButton: DeCommandButton = new DeCommandButton(this, element, data);
-            (element as HTMLButtonElement).innerText = data.property.text;
+        public loadElement(element: HTMLElement): DeCommandButton {
+            let deButton: DeCommandButton = new DeCommandButton(this, element);
 
             element.addEventListener("click", () => {
                 if (formatEditor.pageMode == "format") {
                     DEEFactroyBase.onActive(deButton);
                 } else if (formatEditor.pageMode == "view") {
-                    this.command[data.property.command]();
+                    this.command[deButton.properties.command]();
                 }
             });
-            deButton.name = data.name;
+
+            deButton.id = element.dataset.deid ?? "";
 
             return deButton;
         }
@@ -32,13 +32,10 @@ namespace ooo.de.element {
             });
 
             let deButton: DeCommandButton = new DeCommandButton(this, valueElementPair.element);
-            if (!deButton.propertyData.property) {
-                deButton.propertyData.property = {};
-            }
-            deButton.propertyData.property.text = valueElementPair.value || "button";
-            let elementName = common.newName();
-            deButton.propertyData.name = elementName;
-            (valueElementPair.element as HTMLButtonElement).name = elementName;
+            deButton.properties.text = valueElementPair.value || "button";
+            let id = common.newID();
+            deButton.id = id;
+            valueElementPair.element.dataset["deid"] = id;
 
             valueElementPair.element.addEventListener("click", () => {
                 DEEFactroyBase.onActive(deButton);
@@ -59,15 +56,6 @@ namespace ooo.de.element {
 
     export class DeCommandButton extends DEEElementBase {
         public propertyRoot: DEEPropertyRoot | null = null;
-
-        public getFormProperty() {
-            if (this.propertyRoot) {
-                return this.propertyRoot.getValue();
-            }
-        }
-        public setFormProperty(element: HTMLElement, data: any): void {
-            throw new Error("Method not implemented.");
-        }
         public getFormData(): any {
             return undefined;
         }
@@ -77,21 +65,18 @@ namespace ooo.de.element {
         }
 
         public showProperty(pane: HTMLDivElement): DEEPropertyRoot {
-            this.propertyRoot = new DEEPropertyRoot(pane);
-            if (!this.propertyData.property) {
-                this.propertyData.property = {};
-            }
+            this.propertyRoot = new DEEPropertyRoot(pane, this.properties);
 
             pane.innerHTML = "";
-            new element.DEEPropertyItemString(this.propertyRoot, "name", this.propertyData, "Name", "Name of this element.", v => {
+            new element.DEEPropertyItemString(this.propertyRoot, "name", "Name", "Name of this element.", v => {
                 (this.element as HTMLInputElement).name = v;
                 this.name = v;
             });
-            let property = new element.DEEPropertyBox(this.propertyRoot, "property", "Property");
-            new element.DEEPropertyItemString(property, "text", this.propertyData.property, "Caption text", "Caption text of the button.", v => {
+            let property = new element.DEEPropertyBox(this.propertyRoot, "Property");
+            new element.DEEPropertyItemString(property, "text", "Caption text", "Caption text of the button.", v => {
                 (this.element as HTMLInputElement).innerText = v;
             });
-            new element.DEEPropertyItemSelect(property, "command", this.propertyData.property,
+            new element.DEEPropertyItemSelect(property, "command",
                 [
                     { value: "", caption: "", tooltip: "" },
                     { value: "submit", caption: "submit", tooltip: "Submit the form." },

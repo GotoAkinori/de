@@ -1,6 +1,7 @@
 {
     "$schema": "./server.d.json",
-    "url": "/client",
+    "url": "/dee",
+    "staticUrl": "/client",
     "port": 3000,
     "clientRoot": "./client"
 }

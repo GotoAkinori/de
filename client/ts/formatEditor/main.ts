@@ -2,24 +2,7 @@ namespace ooo.de.formatEditor {
     export let DeeList: element.DEEFactroyBase<any>[] = [];
     export let pageMode: "view" | "format";
 
-    //#region Make Format
-    export function init_format() {
-        pageMode = "format";
-        AddDEE(new element.DeInputFactory());
-        AddDEE(new element.DeCommandButtonFactory());
-
-        element.DEEFactroyBase.onActive = onActive;
-        document.getElementById("menubutton")!.addEventListener("click", showMenu);
-    }
-
-    let properties: {
-        [id: number]: {
-            element: element.DEEFactroyBase<any>,
-            propertyData: any,
-            keepData: any
-        }
-    } = {};
-    let activeProperty: number = -1;
+    //#region Common
 
     /**
      * Add new DEEBase element.
@@ -45,6 +28,24 @@ namespace ooo.de.formatEditor {
             }, "toolbutton"));
         }
     }
+
+    function AddSystemDEE() {
+        AddDEE(new element.DeInputFactory());
+        AddDEE(new element.DeCommandButtonFactory());
+        AddDEE(new element.DeTableFactory());
+    }
+    //#endregion
+
+    //#region Make Format
+    export function init_format() {
+        pageMode = "format";
+        AddSystemDEE();
+
+        element.DEEFactroyBase.onActive = onActive;
+        document.getElementById("menubutton")!.addEventListener("click", showMenu);
+    }
+
+    let activeProperty: string;
 
     function onActive(element: element.DEEElementBase) {
         let propertyView = document.getElementById("propertyView") as HTMLDivElement;
@@ -96,16 +97,13 @@ namespace ooo.de.formatEditor {
     }
 
     async function save(formatName: string) {
-        let formBody = document.getElementById("formatBody");
-        let data = {
-            html: formBody?.innerHTML,
-            properties: {} as { [key: string]: any }
-        };
         for (let elem of element.DEEElementBase.elementList) {
-            data.properties[elem.propertyData.name] = elem.getFormProperty();
+            elem.objectToDataset();
         }
+
+        let html = document.getElementById("formatBody")!.innerHTML;
         try {
-            common.post("../command/format/save/" + formatName, data);
+            common.post("../../command/format/save/" + formatName, html, common.HH_CT_TEXT);
         } catch (ex) {
             console.error(ex);
         }
@@ -118,11 +116,11 @@ namespace ooo.de.formatEditor {
 
         common.addTextDiv(base, "Format List");
         let listDiv = common.addTag(base, "div");
-        let list = await common.postJson("../command/format/list/all") as string[];
+        let list = await common.postJson("../../command/format/list/all") as string[];
         let selectedItem: HTMLDivElement | undefined = undefined;
         let selectedFormatName: string = "";
         for (let name of list) {
-            let formatName = name.substring(0, name.length - 5);
+            let formatName = name.substring(0, name.length - 4);
             let listItem = common.addTextDiv(base, formatName, "menu-item");
 
             listItem.addEventListener("click", () => {
@@ -156,19 +154,18 @@ namespace ooo.de.formatEditor {
     }
 
     async function load(formatName: string) {
-        let data = await common.postJson("../command/format/load/" + formatName);
+        let data = await common.post("../../command/format/load/" + formatName);
 
         let formatBody = document.getElementById("formatBody") as HTMLDivElement;
-        formatBody.innerHTML = data.html;
-        let properties = data.properties;
+        formatBody.innerHTML = data;
 
-        for (let name in properties) {
-            let element: HTMLElement | null = formatBody.querySelector(`*[name='${name}']`);
-            if (element) {
+        let elements = formatBody.querySelectorAll(`*[data-deid]`);
+        elements.forEach(element => {
+            if (element instanceof HTMLElement) {
                 let defactory = DeeList.find(e => e.getType() == element!.dataset.detype);
-                defactory?.loadElement(element, properties[name]);
+                defactory?.loadElement(element);
             }
-        }
+        });
     }
     //#endregion
 
@@ -189,31 +186,29 @@ namespace ooo.de.formatEditor {
         params = urlArgs();
         pageMode = "view";
 
-        AddDEE(new element.DeInputFactory());
-        AddDEE(new element.DeCommandButtonFactory());
+        AddSystemDEE();
 
         element.DEEFactroyBase.onActive = () => { };
 
-        let data = await common.postJson("../command/format/load/" + params.format);
+        let data = await common.post("../../command/format/load/" + params.format);
 
         let formatBody = document.getElementById("formatBody") as HTMLDivElement;
-        formatBody.innerHTML = data.html;
-        let properties = data.properties;
+        formatBody.innerHTML = data;
 
-        for (let name in properties) {
-            let element: HTMLElement | null = formatBody.querySelector(`*[name='${name}']`);
-            if (element) {
+        let elements = formatBody.querySelectorAll(`*[data-deid]`);
+        elements.forEach(element => {
+            if (element instanceof HTMLElement) {
                 let defactory = DeeList.find(e => e.getType() == element!.dataset.detype);
-                defactory?.loadElement(element, properties[name]);
+                defactory?.loadElement(element);
             }
-        }
+        });
 
         if (params.id) {
             try {
-                let data = await common.postJson(`../command/form/${params.format}/load/${params.id}`, properties);
+                let data = await common.postJson(`../../command/form/${params.format}/load/${params.id}`);
 
                 for (let elem of element.DEEElementBase.elementList) {
-                    elem.setFormData(data[elem.propertyData.name]);
+                    elem.setFormData(data[elem.id]);
                     if (params.readonly) {
                         elem.setReadonly();
                     }
@@ -227,11 +222,13 @@ namespace ooo.de.formatEditor {
     export function submit() {
         let properties: { [key: string]: any } = {};
         for (let elem of element.DEEElementBase.elementList) {
-            properties[elem.propertyData.name] = elem.getFormData();
+            if (elem.properties.name) {
+                properties[elem.properties.name] = elem.getFormData();
+            }
         }
 
         try {
-            common.post(`../command/form/${params.format}/create/`, properties);
+            common.post(`../../command/form/${params.format}/create/`, JSON.stringify(properties), common.HH_CT_JSON);
         } catch (ex) {
             console.error(ex);
         }

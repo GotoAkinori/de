@@ -1,5 +1,8 @@
 namespace ooo.de.common {
-    export function post(url: string, data?: any): Promise<string> {
+    export let HH_CT_JSON = { "Content-Type": "application/json" }
+    export let HH_CT_HTML = { "Content-Type": "text/html; charset=UTF-8" }
+    export let HH_CT_TEXT = { "Content-Type": "text/plain; charset=UTF-8" }
+    export function post(url: string, data?: any, headers?: any): Promise<string> {
         return new Promise((res, rej) => {
             let xhr = new XMLHttpRequest();
             xhr.open("POST", url);
@@ -13,12 +16,16 @@ namespace ooo.de.common {
             xhr.addEventListener("error", (err) => {
                 rej(err);
             });
-            xhr.setRequestHeader("content-type", "application/json");
-            xhr.send(data ? JSON.stringify(data) : undefined);
+            if (headers) {
+                for (let key in headers) {
+                    xhr.setRequestHeader(key, headers[key]);
+                }
+            }
+            xhr.send(data ?? undefined);
         });
     }
 
-    export async function postJson(url: string, data?: any): Promise<any> {
-        return JSON.parse(await post(url, data));
+    export async function postJson(url: string, data?: any, headers?: any): Promise<any> {
+        return JSON.parse(await post(url, data, headers));
     }
 }

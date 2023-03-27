@@ -7,8 +7,8 @@
         {
             "name": "Client(formatEditor)",
             "request": "launch",
-            "type": "pwa-chrome",
-            "url": "http://localhost:3000/client/html/formatEditor.html",
+            "type": "chrome",
+            "url": "http://localhost:3000/dee/client/html/formatEditor.html",
             "webRoot": "${workspaceFolder}"
         },
         {

@@ -1,19 +1,22 @@
 namespace ooo.de.element {
     export abstract class DEEElementBase {
         public static elementList: DEEElementBase[] = [];
-        public static idCounter = 0;
-        public id: number;
+        public id: string = "";
         public name: string = "";
+        public properties: { [key: string]: string } = {};
 
-        public constructor(public factory: DEEFactroyBase<any>, public element: HTMLElement, public propertyData: any = {}) {
-            this.id = ++DEEElementBase.idCounter;
+        public constructor(public factory: DEEFactroyBase<any>, public element: HTMLElement) {
             DEEElementBase.elementList.push(this);
+            common.datasetToObject(element, this.properties);
         }
         // Functions for "Form Create Mode"
         public abstract deleteElement(): void;
         public abstract showProperty(pane: HTMLDivElement): DEEPropertyRoot;
-        public abstract getFormProperty(): any;
-        public abstract setFormProperty(element: HTMLElement, data: any): void;
+        public objectToDataset(): void {
+            if (this.element) {
+                common.objectToDataset(this.element, this.properties);
+            }
+        }
 
         // Functions for "View Mode"
         public abstract getFormData(): any;
@@ -24,7 +27,7 @@ namespace ooo.de.element {
     export abstract class DEEFactroyBase<element extends DEEElementBase>  {
         public abstract getType(): string;
         public abstract createElement(range: Range): element;
-        public abstract loadElement(element: HTMLElement, data: any): element;
+        public abstract loadElement(element: HTMLElement): element;
         public abstract makeToolButton(toolbutton: HTMLButtonElement): void;
 
         //#region General Function

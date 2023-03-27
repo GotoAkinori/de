@@ -1,41 +1,45 @@
 namespace ooo.de.element {
-    export abstract class DEEPropertySet {
-        propertyItems: { [name: string]: DEEPropertySet } = {};
+    type keyValue = { [name: string]: string };
+    export abstract class DEEPropertyBase {
+        protected children: DEEPropertyBase[] = [];
 
-        public getValue(): any {
-            let data: { [key: string]: any } = {};
-            for (let key in this.propertyItems) {
-                data[key] = this.propertyItems[key].getValue();
+        public constructor(protected parent: DEEPropertyBase | undefined, public name: string, public data: keyValue) {
+            if (parent) {
+                parent.children.push(this);
             }
-            return data;
+        }
+
+        public getValue(): void {
+            for (let key in this.children) {
+                this.children[key].getValue();
+            }
         }
         public setValue(data: any) {
-            for (let key in data) {
-                let prop = this.propertyItems[key];
+            for (let key in this.children) {
+                let prop = this.children[key];
                 if (prop) {
-                    prop.setValue(data[key]);
+                    prop.setValue(data);
                 }
             }
         }
         public abstract getBody(): HTMLDivElement;
     }
-    export class DEEPropertyRoot extends DEEPropertySet {
-        public constructor(private pane: HTMLDivElement) {
-            super();
+    export class DEEPropertyRoot extends DEEPropertyBase {
+        public constructor(private pane: HTMLDivElement, public data: keyValue) {
+            super(undefined, "", data);
         }
 
         public getBody() {
             return this.pane;
         }
     }
-    export class DEEPropertyBox extends DEEPropertySet {
+    export class DEEPropertyBox extends DEEPropertyBase {
         base: HTMLDivElement;
         header: HTMLDivElement;
         body: HTMLDivElement;
-        name: string = "";
 
-        public constructor(parent: DEEPropertySet, name: string, caption: string) {
-            super();
+        public constructor(parent: DEEPropertyBase, caption: string) {
+            super(parent, "", parent.data);
 
             this.base = common.addTag(parent.getBody(), "div", "prop-base");
             this.header = common.addTag(this.base, "div", "prop-header");
@@ -53,9 +57,6 @@ namespace ooo.de.element {
                     openButton.innerText = "▼";
                 }
             }, "open");
-
-            this.name = name;
-            parent.propertyItems[name] = this;
         }
 
         public getBody() {
@@ -63,21 +64,20 @@ namespace ooo.de.element {
         }
     }
 
-    export class DEEPropertyItemString extends DEEPropertySet {
+    export class DEEPropertyItemString extends DEEPropertyBase {
         input: HTMLInputElement;
-        public constructor(parent: DEEPropertySet, name: string, data: any, caption?: string, description?: string, onChange?: (value: string) => void) {
-            super();
+        public constructor(parent: DEEPropertyBase, public name: string, caption?: string, description?: string, onChange?: (value: string) => void) {
+            super(parent, name, parent.data);
 
             let div = common.addTag(parent.getBody(), "div", "property-name");
             div.innerText = caption ?? name;
             if (description) { div.title = description; }
-            parent.propertyItems[name] = this;
 
             this.input = common.addTag(parent.getBody(), "input");
             this.input.style.marginLeft = "10px";
-            this.input.value = data ? data[name] ?? "" : "";
+            this.input.value = this.data ? this.data[name] ?? "" : "";
             this.input.addEventListener("change", () => {
-                data[name] = this.input.value;
+                this.data[name] = this.input.value;
                 if (onChange) {
                     onChange(this.input.value);
                 }
@@ -86,29 +86,28 @@ namespace ooo.de.element {
         public setValue(value: string) {
             this.input.value = value;
         }
-        public getValue(): string {
-            return this.input.value;
+        public getValue(): void {
+            this.data[this.name] = this.input.value;
         }
         public getBody(): HTMLDivElement {
             throw new Error("Method not implemented.");
         }
     }
 
-    export class DEEPropertyItemSelect extends DEEPropertySet {
+    export class DEEPropertyItemSelect extends DEEPropertyBase {
         select: HTMLSelectElement;
-        public constructor(parent: DEEPropertySet, name: string, data: any, options: (string | { value: string, caption: string, tooltip: string })[], caption?: string, description?: string, onChange?: (value: string) => void) {
-            super();
+        public constructor(parent: DEEPropertyBase, public name: string, options: (string | { value: string, caption: string, tooltip: string })[], caption?: string, description?: string, onChange?: (value: string) => void) {
+            super(parent, name, parent.data);
 
             let div = common.addTag(parent.getBody(), "div", "property-name");
             div.innerText = caption ?? name;
             if (description) { div.title = description; }
-            parent.propertyItems[name] = this;
 
             this.select = common.addTag(parent.getBody(), "select");
             this.select.style.marginLeft = "10px";
-            this.select.value = data ? data[name] ?? "" : "";
+            this.select.value = this.data ? this.data[name] ?? "" : "";
             this.select.addEventListener("change", () => {
-                data[name] = this.select.value;
+                this.data[name] = this.select.value;
                 if (onChange) {
                     onChange(this.select.value);
                 }
@@ -137,8 +136,41 @@ namespace ooo.de.element {
         public setValue(value: string) {
             this.select.value = value;
         }
-        public getValue(): string {
-            return this.select.value;
+        public getValue(): void {
+            this.data[this.name] = this.select.value;
+        }
+        public getBody(): HTMLDivElement {
+            throw new Error("Method not implemented.");
+        }
+    }
+
+    export class DEEPropertyItemCheckBox extends DEEPropertyBase {
+        input: HTMLInputElement;
+        label: HTMLLabelElement;
+        public constructor(parent: DEEPropertyBase, public name: string, caption?: string, description?: string, onChange?: (value: boolean) => void) {
+            super(parent, name, parent.data);
+
+            this.label = common.addTag(parent.getBody(), "label");
+
+            this.input = common.addTag(this.label, "input");
+            this.input.style.marginLeft = "10px";
+            this.input.type = "checkbox";
+            this.input.addEventListener("change", () => {
+                this.data[name] = this.input.checked ? "1" : "0";
+                if (onChange) {
+                    onChange(this.input.checked);
+                }
+            });
+            this.input.checked = this.data[name] == "1";
+
+            let span = common.addTag(this.label, "span");
+            span.innerText = caption ?? name;
+        }
+        public setValue(value: string) {
+            this.input.checked = (value == "1");
+        }
+        public getValue(): void {
+            this.data[this.name] = this.input.checked ? "1" : "0";
         }
         public getBody(): HTMLDivElement {
             throw new Error("Method not implemented.");

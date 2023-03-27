@@ -1,8 +1,12 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema",
     "properties": {
-        "url": {
-            "description": "URL of the server",
+        "commandUrl": {
+            "description": "URL of command server",
+            "type": "string"
+        },
+        "staticUrl": {
+            "description": "URL of static file server",
             "type": "string"
         },
         "port": {
