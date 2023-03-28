@@ -22,7 +22,12 @@ namespace ooo.de.formatEditor {
                     let target = selection.getRangeAt(0).startContainer;
 
                     if (common.checkIsChild(formatBody, target)) {
-                        let data = factory.createElement(selection.getRangeAt(0));
+                        let dee = factory.createElement(selection.getRangeAt(0)) as element.DEEElementBase;
+                        let id = common.newID();
+                        dee.id = id;
+                        dee.element.dataset.deid = id;
+                        dee.element.dataset.detype = factory.getType();
+                        setOnClickElementEvent(dee);
                     }
                 }
             }, "toolbutton"));
@@ -163,9 +168,38 @@ namespace ooo.de.formatEditor {
         elements.forEach(element => {
             if (element instanceof HTMLElement) {
                 let defactory = DeeList.find(e => e.getType() == element!.dataset.detype);
-                defactory?.loadElement(element);
+                if (defactory) {
+                    let dee = defactory.loadElement(element);
+                    dee.id = element.dataset["deid"] ?? "";
+                    setOnClickElementEvent(dee);
+                }
             }
         });
+    }
+
+    function setOnClickElementEvent(dee: element.DEEElementBase) {
+        switch (pageMode) {
+            case "format": {
+                dee.element.addEventListener("click", (ev) => {
+                    if (
+                        ev.target instanceof HTMLElement &&
+                        ev.target.closest("*[data-detype]") == dee.element
+                    ) {
+                        dee.onClickFormatMode(ev);
+                    }
+                });
+            } break;
+            case "view": {
+                dee.element.addEventListener("click", (ev) => {
+                    if (
+                        ev.target instanceof HTMLElement &&
+                        ev.target.closest("*[data-detype]") == dee.element
+                    ) {
+                        dee.onClickViewMode(ev);
+                    }
+                });
+            } break;
+        }
     }
     //#endregion
 

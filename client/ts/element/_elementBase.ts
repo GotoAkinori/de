@@ -12,6 +12,7 @@ namespace ooo.de.element {
         // Functions for "Form Create Mode"
         public abstract deleteElement(): void;
         public abstract showProperty(pane: HTMLDivElement): DEEPropertyRoot;
+        public abstract onClickFormatMode(ev: MouseEvent): void;
         public objectToDataset(): void {
             if (this.element) {
                 common.objectToDataset(this.element, this.properties);
@@ -22,6 +23,7 @@ namespace ooo.de.element {
         public abstract getFormData(): any;
         public abstract setFormData(data: any): void;
         public abstract setReadonly(): void;
+        public abstract onClickViewMode(ev: MouseEvent): void;
     }
 
     export abstract class DEEFactroyBase<element extends DEEElementBase>  {

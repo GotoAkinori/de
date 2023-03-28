@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
+  <defs>
+    <style>
+      .line {
+        stroke: white;
+        stroke-width: 4px;
+      }
+    </style>
+  </defs>
+  <line class="line" x1="4" x2="44" y1="4" y2="24" />
+  <line class="line" x1="4" x2="44" y1="44" y2="24" />
+</svg>

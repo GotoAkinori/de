@@ -63,6 +63,25 @@ div {
     color: #FFF;
 }
 
+#propertyView button {
+    background-color: transparent;
+    color: white;
+    padding: 5px;
+    margin: 2px;
+}
+
+#propertyView button:hover {
+    background-color: #448;
+    color: white;
+    padding: 5px;
+    margin: 2px;
+}
+
+#propertyView button>img {
+    width: 18px;
+    height: 18px;
+}
+
 .toolbutton {
     background-color: transparent;
     border: 1px solid #88A;

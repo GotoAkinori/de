@@ -2,19 +2,7 @@ namespace ooo.de.element {
     export class DeCommandButtonFactory extends DEEFactroyBase<DeCommandButton> {
         public getType() { return "commandbutton"; }
         public loadElement(element: HTMLElement): DeCommandButton {
-            let deButton: DeCommandButton = new DeCommandButton(this, element);
-
-            element.addEventListener("click", () => {
-                if (formatEditor.pageMode == "format") {
-                    DEEFactroyBase.onActive(deButton);
-                } else if (formatEditor.pageMode == "view") {
-                    this.command[deButton.properties.command]();
-                }
-            });
-
-            deButton.id = element.dataset.deid ?? "";
-
-            return deButton;
+            return new DeCommandButton(this, element);
         }
         propContainer?: element.DEEPropertyBox;
 
@@ -26,31 +14,14 @@ namespace ooo.de.element {
             let valueElementPair = this.createSimpleElement(range, (value, doc) => {
                 let element: HTMLButtonElement = doc.createElement("button");
                 element.innerText = value || "button";
-                element.dataset.detype = this.getType();
                 element.style.userSelect = "none";
                 return element;
             });
 
             let deButton: DeCommandButton = new DeCommandButton(this, valueElementPair.element);
             deButton.properties.text = valueElementPair.value || "button";
-            let id = common.newID();
-            deButton.id = id;
-            valueElementPair.element.dataset["deid"] = id;
-
-            valueElementPair.element.addEventListener("click", () => {
-                DEEFactroyBase.onActive(deButton);
-            });
 
             return deButton;
-        }
-
-        private command: { [name: string]: () => void } = {
-            submit: function () {
-                formatEditor.submit();
-            },
-            clear: function () {
-                formatEditor.clear();
-            }
         }
     }
 
@@ -68,12 +39,8 @@ namespace ooo.de.element {
             this.propertyRoot = new DEEPropertyRoot(pane, this.properties);
 
             pane.innerHTML = "";
-            new element.DEEPropertyItemString(this.propertyRoot, "name", "Name", "Name of this element.", v => {
-                (this.element as HTMLInputElement).name = v;
-                this.name = v;
-            });
             let property = new element.DEEPropertyBox(this.propertyRoot, "Property");
-            new element.DEEPropertyItemString(property, "text", "Caption text", "Caption text of the button.", v => {
+            new element.DEEPropertyItemInput(property, "text", "Caption text", "Caption text of the button.", v => {
                 (this.element as HTMLInputElement).innerText = v;
             });
             new element.DEEPropertyItemSelect(property, "command",
@@ -91,6 +58,22 @@ namespace ooo.de.element {
 
         public setReadonly(): void {
             (this.element as HTMLButtonElement).setAttribute("hidden", "hidden");
+        }
+
+        public onClickFormatMode(ev: MouseEvent): void {
+            DEEFactroyBase.onActive(this);
+        }
+        public onClickViewMode(ev: MouseEvent): void {
+            command[this.properties.command]();
+        }
+    }
+
+    let command: { [name: string]: () => void } = {
+        submit: function () {
+            formatEditor.submit();
+        },
+        clear: function () {
+            formatEditor.clear();
         }
     }
 }

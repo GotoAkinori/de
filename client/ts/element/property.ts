@@ -23,6 +23,10 @@ namespace ooo.de.element {
             }
         }
         public abstract getBody(): HTMLDivElement;
+
+        public newLine() {
+            common.addTag(this.getBody(), "br");
+        }
     }
     export class DEEPropertyRoot extends DEEPropertyBase {
         public constructor(private pane: HTMLDivElement, public data: keyValue) {
@@ -64,9 +68,29 @@ namespace ooo.de.element {
         }
     }
 
-    export class DEEPropertyItemString extends DEEPropertyBase {
+    export class DEEPropertyGroup extends DEEPropertyBase {
+        body: HTMLDivElement;
+
+        public constructor(parent: DEEPropertyBase, caption: string, description?: string) {
+            super(parent, "", parent.data);
+
+            this.body = common.addTag(parent.getBody(), "div", "prop-body");
+            this.body.style.padding = "0px";
+
+            let div = common.addTag(this.body, "div", "property-name");
+            div.style.padding = "0px";
+            div.innerText = caption;
+            if (description) { div.title = description; }
+        }
+
+        public getBody() {
+            return this.body;
+        }
+    }
+
+    export class DEEPropertyItemInput extends DEEPropertyBase {
         input: HTMLInputElement;
-        public constructor(parent: DEEPropertyBase, public name: string, caption?: string, description?: string, onChange?: (value: string) => void) {
+        public constructor(parent: DEEPropertyBase, public name: string, caption?: string, description?: string, onChange?: (value: string) => void, type?: string) {
             super(parent, name, parent.data);
 
             let div = common.addTag(parent.getBody(), "div", "property-name");
@@ -82,6 +106,9 @@ namespace ooo.de.element {
                     onChange(this.input.value);
                 }
             });
+            if (type) {
+                this.input.type = type;
+            }
         }
         public setValue(value: string) {
             this.input.value = value;
@@ -105,7 +132,6 @@ namespace ooo.de.element {
 
             this.select = common.addTag(parent.getBody(), "select");
             this.select.style.marginLeft = "10px";
-            this.select.value = this.data ? this.data[name] ?? "" : "";
             this.select.addEventListener("change", () => {
                 this.data[name] = this.select.value;
                 if (onChange) {
@@ -132,6 +158,8 @@ namespace ooo.de.element {
                 optionElement.title = tooltip;
                 optionElement.innerText = caption;
             }
+
+            this.select.value = this.data ? this.data[name] ?? "" : "";
         }
         public setValue(value: string) {
             this.select.value = value;
@@ -150,7 +178,8 @@ namespace ooo.de.element {
         public constructor(parent: DEEPropertyBase, public name: string, caption?: string, description?: string, onChange?: (value: boolean) => void) {
             super(parent, name, parent.data);
 
-            this.label = common.addTag(parent.getBody(), "label");
+            let div = common.addTag(parent.getBody(), "div");
+            this.label = common.addTag(div, "label");
 
             this.input = common.addTag(this.label, "input");
             this.input.style.marginLeft = "10px";
@@ -172,6 +201,32 @@ namespace ooo.de.element {
         public getValue(): void {
             this.data[this.name] = this.input.checked ? "1" : "0";
         }
+        public getBody(): HTMLDivElement {
+            throw new Error("Method not implemented.");
+        }
+    }
+
+    export class DEEPropertyItemButton extends DEEPropertyBase {
+        button: HTMLButtonElement;
+        public constructor(parent: DEEPropertyBase, caption: string, icon?: string, description?: string, onClick?: () => void) {
+            super(parent, "", parent.data);
+
+            this.button = common.addButton(parent.getBody(), "button", () => {
+                if (onClick) {
+                    onClick();
+                }
+            });
+            this.button.style.marginLeft = "10px";
+            this.button.innerText = caption;
+            this.button.title = description ?? "";
+
+            if (icon) {
+                let img = common.addTag(this.button, "img");
+                img.src = "../image/" + icon;
+            }
+        }
+        public setValue(value: string) { }
+        public getValue(): void { }
         public getBody(): HTMLDivElement {
             throw new Error("Method not implemented.");
         }
