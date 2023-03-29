@@ -38,6 +38,7 @@ namespace ooo.de.formatEditor {
         AddDEE(new element.DeInputFactory());
         AddDEE(new element.DeCommandButtonFactory());
         AddDEE(new element.DeTableFactory());
+        AddDEE(new element.DeSelectFactory());
     }
     //#endregion
 
@@ -223,26 +224,16 @@ namespace ooo.de.formatEditor {
         AddSystemDEE();
 
         element.DEEFactroyBase.onActive = () => { };
-
-        let data = await common.post("../../command/format/load/" + params.format);
-
-        let formatBody = document.getElementById("formatBody") as HTMLDivElement;
-        formatBody.innerHTML = data;
-
-        let elements = formatBody.querySelectorAll(`*[data-deid]`);
-        elements.forEach(element => {
-            if (element instanceof HTMLElement) {
-                let defactory = DeeList.find(e => e.getType() == element!.dataset.detype);
-                defactory?.loadElement(element);
-            }
-        });
+        load(params.format);
 
         if (params.id) {
             try {
                 let data = await common.postJson(`../../command/form/${params.format}/load/${params.id}`);
 
                 for (let elem of element.DEEElementBase.elementList) {
-                    elem.setFormData(data[elem.id]);
+                    if(elem.properties.name){
+                        elem.setFormData(data[elem.properties.name]);
+                    }
                     if (params.readonly) {
                         elem.setReadonly();
                     }
