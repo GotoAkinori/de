@@ -68,12 +68,8 @@ namespace ooo.de.element {
         public rows: number = DEFAULT_ROWS;
         public columns: number = DEFAULT_COLUMNS;
 
-        public getFormData(): any {
-            return (this.element as HTMLInputElement).value;
-        }
-        public setFormData(data: any): void {
-            (this.element as HTMLInputElement).value = data ?? this.properties.default_value ?? "";
-        }
+        public getFormData(data: any): void { }
+        public setFormData(data: any): void { }
         public deleteElement(): void {
             throw new Error("Method not implemented.");
         }

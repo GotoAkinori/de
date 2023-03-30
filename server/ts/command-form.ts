@@ -3,6 +3,8 @@ import * as util from "./util";
 const conf = require("../../config/server.json");
 
 export async function commandCreate(format: string, data: any): Promise<{ id: string }> {
+    util.securityCheck_FilePath(format);
+
     let id = util.getID(8);
 
     try {
@@ -18,5 +20,7 @@ export async function commandCreate(format: string, data: any): Promise<{ id: st
 }
 
 export async function commandLoad(format: string, id: string, data: any): Promise<any> {
+    util.securityCheck_FilePath(format);
+
     return await fs.readFile(`./data/forms/${format}/${id}.json`);
 }

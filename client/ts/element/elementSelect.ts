@@ -3,7 +3,7 @@ namespace ooo.de.element {
         public getType() { return "select"; }
         public loadElement(element: HTMLElement): DeSelect {
             let deSelect = new DeSelect(this, element);
-            if(deSelect.properties.default_value){
+            if (deSelect.properties.default_value) {
                 (element as HTMLSelectElement).value = deSelect.properties.default_value;
             }
             return deSelect;
@@ -29,8 +29,10 @@ namespace ooo.de.element {
     export class DeSelect extends DEEElementBase {
         public propertyRoot: DEEPropertyRoot | null = null;
 
-        public getFormData(): any {
-            return (this.element as HTMLInputElement).value;
+        public getFormData(data: any): void {
+            if (this.properties.name) {
+                data[this.properties.name] = (this.element as HTMLSelectElement).value;
+            }
         }
         public setFormData(data: any): void {
             (this.element as HTMLInputElement).value = data ?? this.properties.default_value ?? "";

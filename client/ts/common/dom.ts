@@ -122,7 +122,7 @@ namespace ooo.de.common {
 
     export function newID(): string {
         for (let i = 1; true; i++) {
-            let element = document.querySelector(`*[deid='#${i}']`);
+            let element = document.querySelector(`*[data-deid='#${i}']`);
             if (element == null) {
                 return `#${i}`;
             }

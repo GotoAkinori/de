@@ -27,9 +27,7 @@ namespace ooo.de.element {
 
     export class DeCommandButton extends DEEElementBase {
         public propertyRoot: DEEPropertyRoot | null = null;
-        public getFormData(): any {
-            return undefined;
-        }
+        public getFormData(data: any): void { }
         public setFormData(data: any): void { }
         public deleteElement(): void {
             throw new Error("Method not implemented.");

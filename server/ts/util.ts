@@ -10,9 +10,16 @@ export function getID(length: number) {
         } else if (r < 36) {
             // a - z
             id += String.fromCharCode(r + 97 - 10);
-        }else{
+        } else {
             id += String.fromCharCode(r + 65 - 36);
         }
     }
     return id;
+}
+
+export function securityCheck_FilePath(filepath: string) {
+    // not allowed to refer parent path
+    if (filepath.indexOf("..")) {
+        console.error("[Security Error] Invalid File Path - " + filepath);
+    }
 }

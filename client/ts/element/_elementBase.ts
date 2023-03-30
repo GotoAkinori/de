@@ -20,7 +20,7 @@ namespace ooo.de.element {
         }
 
         // Functions for "View Mode"
-        public abstract getFormData(): any;
+        public abstract getFormData(data: any): void;
         public abstract setFormData(data: any): void;
         public abstract setReadonly(): void;
         public abstract onClickViewMode(ev: MouseEvent): void;

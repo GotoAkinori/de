@@ -27,8 +27,10 @@ namespace ooo.de.element {
     export class DeInput extends DEEElementBase {
         public propertyRoot: DEEPropertyRoot | null = null;
 
-        public getFormData(): any {
-            return (this.element as HTMLInputElement).value;
+        public getFormData(data: any): void {
+            if (this.properties.name) {
+                data[this.properties.name] = (this.element as HTMLInputElement).value;
+            }
         }
         public setFormData(data: any): void {
             (this.element as HTMLInputElement).value = data ?? this.properties.default_value ?? "";

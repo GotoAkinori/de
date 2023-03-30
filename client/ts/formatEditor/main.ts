@@ -39,6 +39,7 @@ namespace ooo.de.formatEditor {
         AddDEE(new element.DeCommandButtonFactory());
         AddDEE(new element.DeTableFactory());
         AddDEE(new element.DeSelectFactory());
+        AddDEE(new element.DeRadioFactory());
     }
     //#endregion
 
@@ -231,7 +232,7 @@ namespace ooo.de.formatEditor {
                 let data = await common.postJson(`../../command/form/${params.format}/load/${params.id}`);
 
                 for (let elem of element.DEEElementBase.elementList) {
-                    if(elem.properties.name){
+                    if (elem.properties.name) {
                         elem.setFormData(data[elem.properties.name]);
                     }
                     if (params.readonly) {
@@ -247,9 +248,7 @@ namespace ooo.de.formatEditor {
     export function submit() {
         let properties: { [key: string]: any } = {};
         for (let elem of element.DEEElementBase.elementList) {
-            if (elem.properties.name) {
-                properties[elem.properties.name] = elem.getFormData();
-            }
+            elem.getFormData(properties);
         }
 
         try {
