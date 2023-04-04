@@ -110,5 +110,18 @@ namespace ooo.de.element {
             this.properties.default = "0";
             this.radioElement.checked = false;
         }
+
+        public getSchema(schema: { [name: string]: any }): void {
+            if (schema[this.properties.name]) {
+                schema[this.properties.name].options.push(this.properties.value);
+                schema[this.properties.name].optionsCaption.push(this.properties.caption);
+            } else {
+                schema[this.properties.name] = {
+                    type: "list",
+                    options: [this.properties.value],
+                    optionsCaption: [this.properties.caption]
+                }
+            }
+        }
     }
 }

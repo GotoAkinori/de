@@ -89,5 +89,13 @@ namespace ooo.de.element {
             DEEFactroyBase.onActive(this);
         }
         public onClickViewMode(ev: MouseEvent): void { }
+
+        public getSchema(schema: { [name: string]: any }): void {
+            schema[this.properties.name] = {
+                type: "list",
+                options: JSON.parse(this.properties.options).map((v: any) => v.value),
+                optionsCaption: JSON.parse(this.properties.options).map((v: any) => v.name)
+            }
+        }
     }
 }

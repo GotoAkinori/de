@@ -68,5 +68,11 @@ namespace ooo.de.element {
             DEEFactroyBase.onActive(this);
         }
         public onClickViewMode(ev: MouseEvent): void { }
+
+        public getSchema(schema: { [name: string]: any }): void {
+            schema[this.properties.name] = {
+                type: "text"
+            }
+        }
     }
 }

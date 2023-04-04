@@ -88,6 +88,7 @@ div {
     border: none;
     border-bottom: solid #FFF 1px;
     color: #FFF;
+    min-width: 80px;
 }
 
 #propertyViewPane option {

@@ -58,7 +58,7 @@ namespace ooo.de.formatEditor {
 
     let activeProperty: string;
 
-    function activate(element: element.DEEElementBase) {
+    export function activate(element: element.DEEElementBase) {
         let propertyView = document.getElementById("propertyView") as HTMLDivElement;
 
         if (activeProperty != element.id) {
@@ -96,6 +96,7 @@ namespace ooo.de.formatEditor {
         common.addTextDiv(base, "Format Name");
         let input = common.addTag(base, "input");
         input.placeholder = "Format Name";
+        input.value = formatProperty.formatName || "";
         input.focus();
         common.addButton(base, "Save", async () => {
             try {
@@ -108,6 +109,7 @@ namespace ooo.de.formatEditor {
     }
 
     async function save(formatName: string) {
+        // Save Format
         for (let elem of element.DEEElementBase.elementList) {
             elem.objectToDataset();
         }
@@ -117,6 +119,16 @@ namespace ooo.de.formatEditor {
             common.post(`${common.COMMAND_PATH}/format/save/${formatName}`, html, common.HH_CT_TEXT);
         } catch (ex) {
             console.error(ex);
+        }
+
+        // Save Schema
+        if (formatProperty.makeSchema == "1") {
+            try {
+                let schemaName = formatProperty.schemaName || formatName;
+                await common.post(`${common.COMMAND_PATH}/schema/save/${schemaName}`, JSON.stringify(getSchema()), common.HH_CT_JSON);
+            } catch (ex) {
+                console.error(ex);
+            }
         }
     }
 
@@ -268,75 +280,6 @@ namespace ooo.de.formatEditor {
     export function clear() {
         for (let elem of element.DEEElementBase.elementList) {
             elem.setFormData({});
-        }
-    }
-
-    let formatProperty: { [key: string]: any } = {};
-    let formatPropertyListToReset: element.DEEPropertyBase[];
-    function onChangeFormProperty() {
-        for (let e of formatPropertyListToReset) {
-            e.resetValue();
-        }
-    }
-    async function makeCommonInfoPane() {
-        let commonInfoView = document.getElementById("commonInfoView") as HTMLDivElement;
-        let formBody = document.getElementById("formatBody") as HTMLDivElement;
-
-        let root = new element.DEEPropertyRoot(commonInfoView, formatProperty);
-        let box = new element.DEEPropertyBox(root, "Format Information");
-
-        // Format name
-        let formatName = new element.DEEPropertyItemInput(box, "formatName", "Format Name", "Name of the format.");
-        formatPropertyListToReset.push(formatName);
-
-        // Schema of format
-        let makeSchema = new element.DEEPropertyItemCheckBox(box, "makeSchema", "Make schema", "If you want to make schema of this format, please check this.");
-        formatPropertyListToReset.push(makeSchema);
-
-        // Element List
-        let elementsSelect = new element.DEEPropertyItemSelect(box, "activeElement", [], "Elements", "Element list in this form.", (v) => {
-            let target = element.DEEElementBase.elementList.find(e => e.id == v);
-            if (target) {
-                activate(target);
-            }
-        });
-        formatPropertyListToReset.push(elementsSelect);
-
-        async function update() {
-            elementsSelect.select.options.length = 0;
-            let pValue = elementsSelect.select.value;
-            elementListUpdate();
-
-            for (let e of element.DEEElementBase.elementList) {
-                let option = document.createElement("option");
-                option.value = e.id;
-                option.innerText = e.properties.name || e.id;
-                elementsSelect.select.add(option);
-            }
-
-            elementsSelect.select.value = pValue;
-        }
-
-        elementsSelect.select.addEventListener("click", update);
-        elementsSelect.select.addEventListener("keydown", update);
-        elementsSelect.select.addEventListener("change", () => {
-            let id = elementsSelect.select.value;
-            let target = element.DEEElementBase.elementList.find(e => e.id == id);
-            if (target) {
-                activate(target);
-            }
-        });
-    }
-
-    function elementListUpdate() {
-        let formBody = document.getElementById("formatBody") as HTMLDivElement;
-        for (let i = 0; i < element.DEEElementBase.elementList.length;) {
-            let e = element.DEEElementBase.elementList[i];
-            if (!formBody.querySelector(`*[data-deid="${e.id}"]`)) {
-                element.DEEElementBase.elementList.splice(i, 1);
-            } else {
-                i++
-            }
         }
     }
 

@@ -19,7 +19,7 @@ export function getID(length: number) {
 
 export function securityCheck_FilePath(filepath: string) {
     // not allowed to refer parent path
-    if (filepath.indexOf("..")) {
+    if (filepath.indexOf("..") >= 0) {
         console.error("[Security Error] Invalid File Path - " + filepath);
     }
 }

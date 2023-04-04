@@ -1,6 +1,8 @@
 import express from "express";
 import * as commandFormat from "./command-format";
 import * as commandForm from "./command-form";
+import * as commandSchema from "./command-schema";
+
 const conf = require("../../config/server.json");
 
 let application = express();
@@ -61,6 +63,28 @@ application.use(conf.url + "/command/form/:format/list/:id", async (req, res) =>
 application.use(conf.url + "/command/form/:format/getAll", async (req, res) => {
     try {
         res.send(await commandForm.commandGetAllData(req.params.format));
+    } catch (ex) {
+        res.sendStatus(500);
+    }
+});
+application.use(conf.url + "/command/schema/save/:name", async (req, res) => {
+    try {
+        await commandSchema.commandSave(req.params.name, req.body);
+        res.send();
+    } catch (ex) {
+        res.sendStatus(500);
+    }
+});
+application.use(conf.url + "/command/schema/load/:name", async (req, res) => {
+    try {
+        res.send(await commandSchema.commandLoad(req.params.name));
+    } catch (ex) {
+        res.sendStatus(500);
+    }
+});
+application.use(conf.url + "/command/schema/list/", async (req, res) => {
+    try {
+        res.send(await commandSchema.commandList());
     } catch (ex) {
         res.sendStatus(500);
     }

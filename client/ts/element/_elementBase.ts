@@ -18,6 +18,7 @@ namespace ooo.de.element {
                 common.objectToDataset(this.element, this.properties);
             }
         }
+        public getSchema(schema: { [name: string]: any }): void { }
 
         // Functions for "View Mode"
         public abstract getFormData(data: any): void;

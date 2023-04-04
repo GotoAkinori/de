@@ -89,6 +89,14 @@ namespace ooo.de.element {
         public getBody() {
             return this.body;
         }
+
+        public show() {
+            this.body.hidden = false;
+        }
+
+        public hide() {
+            this.body.hidden = true;
+        }
     }
 
     export class DEEPropertyItemInput extends DEEPropertyBase {
@@ -102,7 +110,7 @@ namespace ooo.de.element {
 
             this.input = common.addTag(parent.getBody(), "input");
             this.input.style.marginLeft = "10px";
-            this.input.value = this.data ? this.data[name] ?? "" : "";
+            this.input.value = this.data[name] ?? "";
             this.input.addEventListener("change", () => {
                 this.data[name] = this.input.value;
                 if (onChange) {
@@ -114,7 +122,7 @@ namespace ooo.de.element {
             }
         }
         public setValue(data: any) {
-            this.input.value = data[this.name];
+            this.input.value = data[this.name] ?? "";
         }
         public getValue(): void {
             this.data[this.name] = this.input.value;
@@ -142,6 +150,25 @@ namespace ooo.de.element {
                 }
             });
 
+            this.setOptions(options);
+            if (description) {
+                div.title = description;
+            }
+            this.select.value = this.data ? this.data[name] ?? "" : "";
+        }
+        public setValue(data: any) {
+            this.select.value = data[this.name];
+        }
+        public getValue(): void {
+            this.data[this.name] = this.select.value;
+        }
+        public getBody(): HTMLDivElement {
+            throw new Error("Method not implemented.");
+        }
+        public setOptions(options: (string | { value: string, caption: string, tooltip: string })[]) {
+            let previousValue = this.select.value;
+            this.select.options.length = 0;
+
             for (let option of options) {
                 let value: string;
                 let caption: string;
@@ -162,16 +189,7 @@ namespace ooo.de.element {
                 optionElement.innerText = caption;
             }
 
-            this.select.value = this.data ? this.data[name] ?? "" : "";
-        }
-        public setValue(data: any) {
-            this.select.value = data[this.name];
-        }
-        public getValue(): void {
-            this.data[this.name] = this.select.value;
-        }
-        public getBody(): HTMLDivElement {
-            throw new Error("Method not implemented.");
+            this.select.value = previousValue;
         }
     }
 
@@ -197,6 +215,10 @@ namespace ooo.de.element {
 
             let span = common.addTag(this.label, "span");
             span.innerText = caption ?? name;
+
+            if (description) {
+                div.title = description;
+            }
         }
         public setValue(data: any) {
             this.input.checked = (data[this.name] == "1");
@@ -270,10 +292,7 @@ namespace ooo.de.element {
             }
 
             // set property
-            let data = parent.data[name];
-            if (data) {
-                this.setValue(data);
-            }
+            this.setValue(this.data);
 
             // initial process
             this.addAddRow();
