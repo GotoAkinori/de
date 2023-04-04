@@ -39,7 +39,28 @@ application.use(conf.url + "/command/form/:format/create/", async (req, res) => 
 });
 application.use(conf.url + "/command/form/:format/load/:id", async (req, res) => {
     try {
-        res.send(await commandForm.commandLoad(req.params.format, req.params.id, req.body));
+        res.send(await commandForm.commandLoad(req.params.format, req.params.id));
+    } catch (ex) {
+        res.sendStatus(500);
+    }
+});
+application.use(conf.url + "/command/form/:format/remove/:id", async (req, res) => {
+    try {
+        res.send(await commandForm.commandRemove(req.params.format, req.params.id));
+    } catch (ex) {
+        res.sendStatus(500);
+    }
+});
+application.use(conf.url + "/command/form/:format/list/:id", async (req, res) => {
+    try {
+        res.send(await commandForm.commandDataList(req.params.format));
+    } catch (ex) {
+        res.sendStatus(500);
+    }
+});
+application.use(conf.url + "/command/form/:format/getAll", async (req, res) => {
+    try {
+        res.send(await commandForm.commandGetAllData(req.params.format));
     } catch (ex) {
         res.sendStatus(500);
     }

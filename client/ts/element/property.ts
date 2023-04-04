@@ -23,6 +23,9 @@ namespace ooo.de.element {
             }
         }
         public abstract getBody(): HTMLDivElement;
+        public resetValue() {
+            this.setValue(this.data);
+        }
 
         public newLine() {
             common.addTag(this.getBody(), "br");
@@ -51,16 +54,16 @@ namespace ooo.de.element {
 
             this.header.innerHTML = caption;
             let open = true;
-            let openButton = common.addButton(this.header, "▲", () => {
+            let openButton = common.addButton(this.header, "", () => {
                 open = !open;
                 if (open) {
                     this.body.classList.remove("shrink");
-                    openButton.innerText = "▲";
+                    openButton.classList.remove("shrink");
                 } else {
                     this.body.classList.add("shrink");
-                    openButton.innerText = "▼";
+                    openButton.classList.add("shrink");
                 }
-            }, "open");
+            });
         }
 
         public getBody() {
@@ -110,8 +113,8 @@ namespace ooo.de.element {
                 this.input.type = type;
             }
         }
-        public setValue(value: string) {
-            this.input.value = value;
+        public setValue(data: any) {
+            this.input.value = data[this.name];
         }
         public getValue(): void {
             this.data[this.name] = this.input.value;
@@ -161,8 +164,8 @@ namespace ooo.de.element {
 
             this.select.value = this.data ? this.data[name] ?? "" : "";
         }
-        public setValue(value: string) {
-            this.select.value = value;
+        public setValue(data: any) {
+            this.select.value = data[this.name];
         }
         public getValue(): void {
             this.data[this.name] = this.select.value;
@@ -195,8 +198,8 @@ namespace ooo.de.element {
             let span = common.addTag(this.label, "span");
             span.innerText = caption ?? name;
         }
-        public setValue(value: string) {
-            this.input.checked = (value == "1");
+        public setValue(data: any) {
+            this.input.checked = (data[this.name] == "1");
         }
         public getValue(): void {
             this.data[this.name] = this.input.checked ? "1" : "0";
@@ -225,7 +228,7 @@ namespace ooo.de.element {
                 img.src = "../image/" + icon;
             }
         }
-        public setValue(value: string) { }
+        public setValue(data: string) { }
         public getValue(): void { }
         public getBody(): HTMLDivElement {
             throw new Error("Method not implemented.");
@@ -360,11 +363,11 @@ namespace ooo.de.element {
             removeImg.src = "../image/cross.svg";
         }
 
-        public setValue(value: string) {
-            let data = JSON.parse(value);
+        public setValue(data: any) {
+            let itemData = JSON.parse(data[this.name]);
             this.tbody.innerHTML = "";
 
-            for (let rowData of data) {
+            for (let rowData of itemData) {
                 let [tr, tds] = common.addTR(this.tbody, this.columns.length + 1);
                 this.setToolTD(tr);
                 for (let i = 0; i < this.columns.length; i++) {

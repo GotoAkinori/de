@@ -33,7 +33,9 @@ namespace ooo.de.element {
             }
         }
         public setFormData(data: any): void {
-            (this.element as HTMLInputElement).value = data ?? this.properties.default_value ?? "";
+            if (this.properties.name) {
+                (this.element as HTMLInputElement).value = data[this.properties.name] ?? this.properties.default_value ?? "";
+            }
         }
         public deleteElement(): void {
             throw new Error("Method not implemented.");

@@ -28,4 +28,6 @@ namespace ooo.de.common {
     export async function postJson(url: string, data?: any, headers?: any): Promise<any> {
         return JSON.parse(await post(url, data, headers));
     }
+
+    export const COMMAND_PATH = "../../command";
 }

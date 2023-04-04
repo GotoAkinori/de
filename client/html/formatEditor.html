@@ -7,6 +7,7 @@
     <title>Format Editor</title>
 
     <link rel="stylesheet" href="../css/elements.css">
+    <link rel="stylesheet" href="../css/pane.css">
     <link rel="stylesheet" href="../css/formatEditor.css">
     <link rel="stylesheet" href="../css/menu.css">
     <script src="../js/decc.js"></script>
@@ -17,7 +18,10 @@
         <button id="menubutton"><img src="../image/menu.svg" alt="menu" width="12px"></button>
     </div>
     <div class="pane" id="formatBody" contenteditable="true"></div>
-    <div class="pane" id="propertyView"></div>
+    <div class="pane" id="propertyViewPane">
+        <div id="commonInfoView"></div>
+        <div id="propertyView"></div>
+    </div>
 </body>
 
 </html>

@@ -1,0 +1,67 @@
+html {
+    --pane-size: 100px;
+}
+
+.pane-left {
+    position: absolute;
+    left: 0px;
+    right: calc(100% - var(--pane-size));
+    top: 0px;
+    bottom: 0px;
+}
+
+.pane-left-body {
+    position: absolute;
+    left: var(--pane-size);
+    right: 0px;
+    top: 0px;
+    bottom: 0px;
+}
+
+.pane-right {
+    position: absolute;
+    left: calc(100% - var(--pane-size));
+    right: 0px;
+    top: 0px;
+    bottom: 0px;
+}
+
+.pane-right-body {
+    position: absolute;
+    left: 0px;
+    right: var(--pane-size);
+    top: 0px;
+    bottom: 0px;
+}
+
+.pane-top {
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    bottom: calc(100% - var(--pane-size));
+}
+
+.pane-top-body {
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    top: var(--pane-size);
+    width: 0px;
+}
+
+.pane-bottom {
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    top: calc(100% - var(--pane-size));
+    bottom: 0px;
+}
+
+.pane-bottom-body {
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    bottom: var(--pane-size);
+}

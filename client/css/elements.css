@@ -8,7 +8,40 @@ table.grid td {
     border: #666 solid 1px;
 }
 
-table td > div{
+table td>div {
     min-width: 20px;
     min-height: 20px;
+}
+
+table.dataview {
+    border-collapse: collapse;
+}
+
+table.dataview thead td {
+    background-color: #008;
+    color: azure;
+    text-align: center;
+    font-weight: bold;
+}
+
+table.dataview td {
+    border: #666 solid 1px;
+}
+
+table.dataview button {
+    background-color: transparent;
+    border: #448 solid 1px;
+    border-radius: 20px;
+    width: 28px;
+    height: 28px;
+    margin: 0px 2px;
+}
+
+table.dataview button:hover {
+    background-color: #88F;
+}
+
+table.dataview button img {
+    width: 100%;
+    height: 100%;
 }

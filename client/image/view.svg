@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
+  <defs>
+    <style>
+      .line {
+        stroke: white;
+        stroke-width: 4px;
+        fill: transparent;
+      }
+
+      .fill {
+        fill: white;
+      }
+    </style>
+  </defs>
+  <path class="line" d="M 4 24 a 24 24 0 0 1 40 0 a 24 24 0 0 1 -40 0 z" />
+  <circle class="fill" cx="24" cy="24" r="10" />
+</svg>
