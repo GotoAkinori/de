@@ -64,8 +64,8 @@ namespace ooo.de.element {
                     description: "Data value of item.",
                     notNull: true
                 }, {
-                    name: "name",
-                    caption: "Name",
+                    name: "caption",
+                    caption: "Caption",
                     description: "Text displayed in option list."
                 }],
                 "Options", "Options of select", () => {
@@ -73,7 +73,7 @@ namespace ooo.de.element {
                     select.innerHTML = "";
                     for (let d of JSON.parse(propertyOptions.data.options)) {
                         let option = common.addTag(select, "option");
-                        option.innerText = d.name || d.value;
+                        option.innerText = d.caption || d.value;
                         option.value = d.value;
                     }
                 });
@@ -94,7 +94,7 @@ namespace ooo.de.element {
             schema[this.properties.name] = {
                 type: "list",
                 options: JSON.parse(this.properties.options).map((v: any) => v.value),
-                optionsCaption: JSON.parse(this.properties.options).map((v: any) => v.name)
+                optionsCaption: JSON.parse(this.properties.options).map((v: any) => v.caption)
             }
         }
     }

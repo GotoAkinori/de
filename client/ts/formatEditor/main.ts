@@ -37,10 +37,10 @@ namespace ooo.de.formatEditor {
 
     function AddSystemDEE() {
         AddDEE(new element.DeInputFactory());
-        AddDEE(new element.DeCommandButtonFactory());
         AddDEE(new element.DeTableFactory());
         AddDEE(new element.DeSelectFactory());
         AddDEE(new element.DeRadioFactory());
+        AddDEE(new element.DeCommandButtonFactory());
         AddDEE(new element.DeDataViewFactory());
     }
     //#endregion

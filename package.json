@@ -7,7 +7,8 @@
     "sv": "nodemon server/js/svmain.js -devmode -something 1",
     "wc": "tsc -w -p tsconfig-client.json",
     "ws": "tsc -w -p tsconfig-server.json",
-    "su": "setup.bat"
+    "su": "setup.bat",
+    "r": "node make-release.mjs"
   },
   "author": "Goto Akinori",
   "license": "MIT",
@@ -16,6 +17,7 @@
     "express": "^4.17.1"
   },
   "devDependencies": {
+    "archiver": "^5.3.1",
     "nodemon": "^2.0.4"
   }
 }

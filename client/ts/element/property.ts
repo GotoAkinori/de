@@ -383,23 +383,25 @@ namespace ooo.de.element {
         }
 
         public setValue(data: any) {
-            let itemData = JSON.parse(data[this.name]);
-            this.tbody.innerHTML = "";
+            if (data[this.name]) {
+                let itemData = JSON.parse(data[this.name]);
+                this.tbody.innerHTML = "";
 
-            for (let rowData of itemData) {
-                let [tr, tds] = common.addTR(this.tbody, this.columns.length + 1);
-                this.setToolTD(tr);
-                for (let i = 0; i < this.columns.length; i++) {
-                    let input = common.addTag(tds[i + 1], "input");
-                    input.addEventListener("change", () => {
-                        this.onChangeInput(input);
-                    });
-                    input.addEventListener("keydown", ev => {
-                        if (ev.key == "Enter") {
+                for (let rowData of itemData) {
+                    let [tr, tds] = common.addTR(this.tbody, this.columns.length + 1);
+                    this.setToolTD(tr);
+                    for (let i = 0; i < this.columns.length; i++) {
+                        let input = common.addTag(tds[i + 1], "input");
+                        input.addEventListener("change", () => {
                             this.onChangeInput(input);
-                        }
-                    });
-                    input.value = rowData[this.columns[i].name] ?? "";
+                        });
+                        input.addEventListener("keydown", ev => {
+                            if (ev.key == "Enter") {
+                                this.onChangeInput(input);
+                            }
+                        });
+                        input.value = rowData[this.columns[i].name] ?? "";
+                    }
                 }
             }
         }

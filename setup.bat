@@ -1,2 +1,9 @@
 cd /d %~dp0
-mkdir data\format
+
+REM npm install
+call npm install
+
+REM make required directory
+mkdir .\data\format
+mkdir .\data\forms
+mkdir .\data\schema

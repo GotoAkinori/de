@@ -4,3 +4,4 @@ package-lock.json
 /**/js/
 data
 *-local.*
+release/*.log
