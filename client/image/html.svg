@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
+  <defs>
+    <style>
+      .line {
+        stroke: white;
+        stroke-width: 4px;
+        fill: transparent;
+      }
+      .text {
+        fill: white;
+      }
+    </style>
+  </defs>
+  <polyline class="line" points="40 38 40 40 36 44 8 44 8 4 40 4 40 26" />
+  <text class="text" x="14" y="36" font-size="12px" color="white">
+    HTML
+  </text>
+</svg>

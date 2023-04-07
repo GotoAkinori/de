@@ -1,4 +1,6 @@
 namespace ooo.de.formatEditor {
+    const META_INFO_TAG_ID = "ooo_de_meta_tag";
+
     export function showSaveDialog(ev: MouseEvent) {
         let [base, back] = ooo.de.common.modal();
 
@@ -35,7 +37,7 @@ namespace ooo.de.formatEditor {
         }
         common.addButton(base, "Save", execSave);
         input.addEventListener("keypress", (ev) => {
-            if (ev.key == "Enter"){
+            if (ev.key == "Enter") {
                 execSave();
             }
         });
@@ -47,7 +49,20 @@ namespace ooo.de.formatEditor {
             elem.objectToDataset();
         }
 
+        {
+            // insert meta-information-tag
+            let metaInfo = document.getElementById(META_INFO_TAG_ID);
+            if (!metaInfo) {
+                let formatBody = document.getElementById("formatBody")!;
+                formatBody.contentEditable = "false";
+                metaInfo = common.addTag(formatBody, "div");
+                metaInfo.id = META_INFO_TAG_ID;
+            }
+            common.objectToDataset(metaInfo, formatProperty);
+        }
+
         let html = document.getElementById("formatBody")!.innerHTML;
+
         try {
             common.post(`${common.COMMAND_PATH}/format/save/${formatName}`, html, common.HH_CT_TEXT);
         } catch (ex) {
@@ -129,7 +144,22 @@ namespace ooo.de.formatEditor {
 
         let formatBody = document.getElementById("formatBody") as HTMLDivElement;
         formatBody.innerHTML = data;
+        formatProperty = {};
 
+        {
+            // get meta-information-tag info
+            let metaInfo = document.getElementById(META_INFO_TAG_ID);
+            if (metaInfo) {
+                common.datasetToObject(metaInfo, formatProperty);
+            } else {
+                formatProperty.formatName = formatName;
+            }
+        }
+
+        // clear elements
+        element.DEEElementBase.elementList.length = 0;
+
+        // create dee-elements
         let elements = formatBody.querySelectorAll(`*[data-deid]`);
         elements.forEach(element => {
             if (element instanceof HTMLElement) {
@@ -142,7 +172,14 @@ namespace ooo.de.formatEditor {
             }
         });
 
-        formatProperty.formatName = formatName;
-        onChangeFormProperty();
+        {
+            // load schema
+            if (formatProperty?.makeSchema == "1") {
+                let schemaName: string = formatProperty.schemaName ?? formatProperty.formatName;
+                schema = await common.postJson(`${common.COMMAND_PATH}/schema/load/${schemaName}`);
+            }
+        }
+
+        setFormProperty();
     }
 }

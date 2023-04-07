@@ -5,8 +5,27 @@ const conf = require("../../config/server.json");
 export async function commandCreate(format: string, data: any): Promise<{ result: boolean, id: string, format: string }> {
     try {
         util.securityCheck_FilePath(format);
-
         let id = util.getID(8);
+
+        try {
+            await fs.access(`./data/forms/${format}`);
+        } catch (e) {
+            await fs.mkdir(`./data/forms/${format}`, {
+                recursive: true
+            });
+        }
+
+        await fs.writeFile(`./data/forms/${format}/${id}.json`, JSON.stringify(data), {});
+        return { result: true, id: id, format: format };
+    } catch (ex) {
+        return { result: false, id: "", format: format };
+    }
+}
+
+export async function commandUpdate(format: string, data: any, id: string): Promise<any> {
+    try {
+        util.securityCheck_FilePath(format);
+        util.securityCheck_FilePath(id);
 
         try {
             await fs.access(`./data/forms/${format}`);

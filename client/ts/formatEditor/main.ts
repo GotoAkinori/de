@@ -1,6 +1,7 @@
 namespace ooo.de.formatEditor {
     export let DeeList: element.DEEFactroyBase<any>[] = [];
     export let pageMode: "view" | "format";
+    export let schema: { [key: string]: any };
 
     //#region Common
 
@@ -145,8 +146,21 @@ namespace ooo.de.formatEditor {
             await elem.getFormData(properties);
         }
 
+        let schemaName = formatProperty.schemaName ?? params.format;
+
+        let id: string | undefined = undefined;
+        if (formatProperty.idProperty) {
+            id = properties[formatProperty.idProperty];
+        } else if (params.id) {
+            id = params.id;
+        }
+
         try {
-            await common.post(`${common.COMMAND_PATH}/form/${params.format}/create/`, JSON.stringify(properties), common.HH_CT_JSON);
+            if (id) {
+                await common.post(`${common.COMMAND_PATH}/form/${schemaName}/update/${id}`, JSON.stringify(properties), common.HH_CT_JSON);
+            } else {
+                await common.post(`${common.COMMAND_PATH}/form/${schemaName}/create/`, JSON.stringify(properties), common.HH_CT_JSON);
+            }
         } catch (ex) {
             console.error(ex);
         }
@@ -156,6 +170,70 @@ namespace ooo.de.formatEditor {
         for (let elem of element.DEEElementBase.elementList) {
             elem.setFormData({});
         }
+    }
+
+    export function showLoadHTMLDialog(ev: MouseEvent) {
+        let [base, back] = ooo.de.common.modal();
+
+        common.addTextDiv(base, "HTML File");
+        let input = common.addTag(base, "input");
+        input.placeholder = "Select HTML file";
+        input.type = "file";
+        input.focus();
+
+        let exec = async () => {
+            try {
+                if (input.files && input.files.length > 0) {
+                    await loadHTML(input.files[0]);
+                    back.remove();
+                }
+            } catch (ex) {
+                console.error(ex);
+            }
+        }
+        common.addButton(base, "Load", exec);
+        input.addEventListener("keypress", (ev) => {
+            if (ev.key == "Enter") {
+                exec();
+            }
+        });
+
+        // Adjust window position
+        {
+            base.style.top = ev.clientY + ".px";
+            base.style.left = ev.clientX + ".px";
+            let clientRect = base.getBoundingClientRect();
+            if (clientRect.left < 0) {
+                base.style.left = "0px";
+            } else if (clientRect.right >= window.innerWidth) {
+                base.style.left = (window.innerWidth - clientRect.width) + "px";
+            }
+            if (clientRect.top < 0) {
+                base.style.top = "0px";
+            } else if (clientRect.bottom >= window.innerHeight) {
+                base.style.top = (window.innerHeight - clientRect.height) + "px";
+            }
+        }
+    }
+
+    async function loadHTML(file: File) {
+        let formatBody = document.getElementById("formatBody") as HTMLDivElement;
+        formatProperty = {};
+
+        let byteArray = await file.arrayBuffer();
+        let htmlString = common.ArrayBufferToString(byteArray);
+
+        let htmlDoc = new DOMParser().parseFromString(htmlString, 'text/html');
+
+        // move css items to html body.
+        let headerElements = htmlDoc.head.querySelectorAll("link,style");
+        for (let i = 0; i < headerElements.length; i++) {
+            htmlDoc.body.innerHTML += (headerElements[i] as HTMLElement).outerHTML;
+        }
+
+        // script can't move.
+        let modifiedHtmlString = htmlDoc.body.innerHTML;
+        formatBody.innerHTML = modifiedHtmlString;
     }
 
     //#endregion

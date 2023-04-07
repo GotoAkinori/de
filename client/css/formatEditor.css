@@ -41,18 +41,11 @@ div {
     background-color: transparent;
 }
 
-/* #formatBody {
-    left: 0px;
-    top: var(--toolbar-height);
-    right: var(--property-view-width);
-    bottom: 0px;
-} */
+#formatBody {
+    overflow: auto;
+}
 
 #propertyViewPane {
-    /* left: calc(100% - var(--property-view-width));
-    top: 0px;
-    right: 0px;
-    bottom: 0px; */
     padding: 5px;
     overflow-y: auto;
 }
@@ -217,4 +210,8 @@ div {
 
 .prop-body div.property-name {
     margin: 10px 0px 0px 0px;
+}
+
+#ooo_de_meta_tag {
+    display: none;
 }

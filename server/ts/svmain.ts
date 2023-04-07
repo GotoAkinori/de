@@ -39,6 +39,13 @@ application.use(conf.url + "/command/form/:format/create/", async (req, res) => 
         res.sendStatus(500);
     }
 });
+application.use(conf.url + "/command/form/:format/update/:id", async (req, res) => {
+    try {
+        res.send(await commandForm.commandUpdate(req.params.format, req.body, req.params.id));
+    } catch (ex) {
+        res.sendStatus(500);
+    }
+});
 application.use(conf.url + "/command/form/:format/load/:id", async (req, res) => {
     try {
         res.send(await commandForm.commandLoad(req.params.format, req.params.id));
