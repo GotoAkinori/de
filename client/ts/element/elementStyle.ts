@@ -51,7 +51,7 @@ namespace ooo.de.element {
             this.onChange();
         }
 
-        public getFormData(data: any): void { }
+        public async getFormData(data: any): Promise<void>  { }
         public setFormData(data: any): void { }
         public deleteElement(): void {
             throw new Error("Method not implemented.");

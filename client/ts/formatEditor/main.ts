@@ -47,6 +47,7 @@ namespace ooo.de.formatEditor {
             "<span style='font-weight:bold'>Bold</span>", {
             fontWeight: "bold"
         }));
+        AddDEE(new element.DeFileFactory());
     }
     //#endregion
 
@@ -138,14 +139,14 @@ namespace ooo.de.formatEditor {
         }
     }
 
-    export function submit() {
+    export async function submit() {
         let properties: { [key: string]: any } = {};
         for (let elem of element.DEEElementBase.elementList) {
-            elem.getFormData(properties);
+            await elem.getFormData(properties);
         }
 
         try {
-            common.post(`${common.COMMAND_PATH}/form/${params.format}/create/`, JSON.stringify(properties), common.HH_CT_JSON);
+            await common.post(`${common.COMMAND_PATH}/form/${params.format}/create/`, JSON.stringify(properties), common.HH_CT_JSON);
         } catch (ex) {
             console.error(ex);
         }

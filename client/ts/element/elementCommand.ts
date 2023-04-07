@@ -15,6 +15,7 @@ namespace ooo.de.element {
                 let element: HTMLButtonElement = doc.createElement("button");
                 element.innerText = value || "button";
                 element.style.userSelect = "none";
+                element.contentEditable = "false";
                 return element;
             });
 
@@ -27,7 +28,7 @@ namespace ooo.de.element {
 
     export class DeCommandButton extends DEEElementBase {
         public propertyRoot: DEEPropertyRoot | null = null;
-        public getFormData(data: any): void { }
+        public async getFormData(data: any): Promise<void> { }
         public setFormData(data: any): void { }
         public deleteElement(): void {
             throw new Error("Method not implemented.");

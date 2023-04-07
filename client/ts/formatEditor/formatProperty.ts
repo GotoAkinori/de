@@ -16,7 +16,7 @@ namespace ooo.de.formatEditor {
 
         // Save/Load
         new element.DEEPropertyItemButton(boxFormatInfo, "", "../image/save.svg", "Save format.", showSaveDialog);
-        new element.DEEPropertyItemButton(boxFormatInfo, "", "../image/load.svg", "Save format.", showLoadDialog);
+        new element.DEEPropertyItemButton(boxFormatInfo, "", "../image/load.svg", "Load format.", showLoadDialog);
 
         // Format name
         let formatName = new element.DEEPropertyItemInput(boxFormatInfo, "formatName", "Format Name", "Name of the format.");

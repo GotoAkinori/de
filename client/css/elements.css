@@ -45,3 +45,12 @@ table.dataview button img {
     width: 100%;
     height: 100%;
 }
+
+.file button {
+    background-color: #444;
+    margin: 2px;
+}
+
+.file button:hover {
+    background-color: #888;
+}

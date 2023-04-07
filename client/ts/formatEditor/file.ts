@@ -24,12 +24,19 @@ namespace ooo.de.formatEditor {
         input.placeholder = "Format Name";
         input.value = formatProperty.formatName || "";
         input.focus();
-        common.addButton(base, "Save", async () => {
+
+        let execSave = async () => {
             try {
                 await save(input.value);
                 back.remove();
             } catch (ex) {
                 console.error(ex);
+            }
+        }
+        common.addButton(base, "Save", execSave);
+        input.addEventListener("keypress", (ev) => {
+            if (ev.key == "Enter"){
+                execSave();
             }
         });
     }

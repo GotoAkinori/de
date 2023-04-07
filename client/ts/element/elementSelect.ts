@@ -17,6 +17,7 @@ namespace ooo.de.element {
         public createElement(range: Range): DeSelect {
             let valueElementPair = this.createSimpleElement(range, (value, doc) => {
                 let element = doc.createElement("select");
+                element.contentEditable = "false";
                 return element;
             });
 
@@ -29,7 +30,7 @@ namespace ooo.de.element {
     export class DeSelect extends DEEElementBase {
         public propertyRoot: DEEPropertyRoot | null = null;
 
-        public getFormData(data: any): void {
+        public async getFormData(data: any): Promise<void>  {
             if (this.properties.name) {
                 data[this.properties.name] = (this.element as HTMLSelectElement).value;
             }

@@ -13,6 +13,7 @@ namespace ooo.de.element {
         public createElement(range: Range): DeRadio {
             let valueElementPair = this.createSimpleElement(range, (value, doc) => {
                 let element = doc.createElement("label");
+                element.contentEditable = "false";
                 return element;
             });
 
@@ -53,7 +54,7 @@ namespace ooo.de.element {
             }
         }
 
-        public getFormData(data: any): any {
+        public async getFormData(data: any): Promise<void>  {
             if (this.radioElement.checked) {
                 data[this.properties.name] = this.properties.value;
             }

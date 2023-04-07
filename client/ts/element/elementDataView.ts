@@ -14,6 +14,7 @@ namespace ooo.de.element {
             let valueElementPair = this.createSimpleElement(range, (value, doc) => {
                 let element = doc.createElement("table");
                 element.classList.add("dataview");
+                element.contentEditable = "false";
                 return element;
             });
 
@@ -54,7 +55,7 @@ namespace ooo.de.element {
             }
         }
 
-        public getFormData(data: any): void { }
+        public async getFormData(data: any): Promise<void> { }
         public setFormData(data: any): void { }
         public deleteElement(): void {
             throw new Error("Method not implemented.");

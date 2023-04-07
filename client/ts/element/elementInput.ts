@@ -14,6 +14,7 @@ namespace ooo.de.element {
             let valueElementPair = this.createSimpleElement(range, (value, doc) => {
                 let element = doc.createElement("input");
                 element.value = value;
+                element.contentEditable = "false";
                 return element;
             });
 
@@ -27,7 +28,7 @@ namespace ooo.de.element {
     export class DeInput extends DEEElementBase {
         public propertyRoot: DEEPropertyRoot | null = null;
 
-        public getFormData(data: any): void {
+        public async getFormData(data: any): Promise<void>  {
             if (this.properties.name) {
                 data[this.properties.name] = (this.element as HTMLInputElement).value;
             }

@@ -21,7 +21,7 @@ namespace ooo.de.element {
         public getSchema(schema: { [name: string]: any }): void { }
 
         // Functions for "View Mode"
-        public abstract getFormData(data: any): void;
+        public abstract getFormData(data: any): Promise<void>;
         public abstract setFormData(data: any): void;
         public abstract setReadonly(): void;
         public abstract onClickViewMode(ev: MouseEvent): void;
