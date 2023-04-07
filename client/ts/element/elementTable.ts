@@ -77,7 +77,6 @@ namespace ooo.de.element {
         public showProperty(pane: HTMLDivElement): DEEPropertyRoot {
             this.propertyRoot = new DEEPropertyRoot(pane, this.properties);
 
-            pane.innerHTML = "";
             let property = new element.DEEPropertyBox(this.propertyRoot, "Property");
             new element.DEEPropertyItemInput(property, "columns", "Columns", "Columns number", v => {
                 this.onChangeTableSize();
@@ -109,6 +108,9 @@ namespace ooo.de.element {
                 this.shrinkBottom();
             });
 
+            this.rows = this.getCurrentRows();
+            this.columns = this.getCurrentColumns();
+
             return this.propertyRoot;
         }
 
@@ -126,41 +128,91 @@ namespace ooo.de.element {
 
         //#region Table Size Changing
         public onChangeTableSize() {
-            let newRows = Number(this.properties.rows);
-            let newColumns = Number(this.properties.columns);
+            const newRows = Number(this.properties.rows);
+            const newColumns = Number(this.properties.columns);
             let table = this.element as HTMLTableElement;
 
-            // Shrink Rows
-            for (; this.rows > newRows; this.rows--) {
-                table.rows[table.rows.length - 1].remove();
-            }
+            const currentRows = this.getCurrentRows();
+            const currentColumns = this.getCurrentColumns();
+            let info = this.getTableMergeInfo();
 
-            // Expand Rows
-            for (; this.rows < newRows; this.rows++) {
-                let [, tds] = common.addTR(table, this.columns);
-                for (let td of tds) {
-                    common.addTag(td, "div");
+            // Shrink Rows
+            if (newRows < currentRows) {
+                for (let c = 0; c < currentColumns; c++) {
+                    if (info[newRows][c].column == c) {
+                        if (info[newRows][c].row < newRows) {
+                            info[newRows][c].cell.rowSpan = newRows - info[newRows][c].row;
+                        }
+                    }
+                }
+                for (let r = newRows; r < currentRows; r++) {
+                    table.rows[r].remove();
                 }
             }
 
+            // Expand Rows
+            else if (newRows > currentRows) {
+                for (let r = currentRows; r < newRows; r++) {
+                    let [, tds] = common.addTR(table, currentColumns);
+                    for (let td of tds) {
+                        common.addTag(td, "div");
+                    }
+                }
+            }
+
+            // Reset Information
+            info = this.getTableMergeInfo();
+
             // Shrink Columns
-            for (let r = 0; r < newRows; r++) {
-                let row = table.rows[r];
-                for (let columns = this.columns; columns > newColumns; columns--) {
-                    row.cells[row.cells.length - 1].remove();
+            if (newColumns < currentColumns) {
+                for (let r = 0; r < newRows; r++) {
+                    if (info[r][newColumns].row == r) {
+                        if (info[r][newColumns].column < newColumns) {
+                            info[r][newColumns].cell.colSpan = newColumns - info[r][newColumns].column;
+                        } else {
+                            info[r][newColumns].cell.remove();
+                        }
+                    }
+
+                    for (let c = newColumns + 1; c < currentColumns; c++) {
+                        if (
+                            info[r][c].row == r &&
+                            info[r][c].column == c
+                        ) {
+                            info[r][c].cell.remove();
+                        }
+                    }
                 }
             }
 
             // Expand Columns
-            for (let r = 0; r < newRows; r++) {
-                let row = table.rows[r];
-                for (let columns = this.columns; columns < newColumns; columns++) {
-                    let td = common.addTag(row, "td");
-                    common.addTag(td, "div");
+            else if (newColumns > currentColumns) {
+                for (let r = 0; r < newRows; r++) {
+                    let row = table.rows[r];
+                    for (let c = currentColumns; c < newColumns; c++) {
+                        let td = common.addTag(row, "td");
+                        common.addTag(td, "div");
+                    }
                 }
             }
 
             this.columns = newColumns;
+            this.rows = newRows;
+        }
+
+        private getCurrentColumns() {
+            let columns = 0;
+            if ((this.element as HTMLTableElement).rows.length > 0) {
+                let row = (this.element as HTMLTableElement).rows[0];
+                for (let c = 0; c < row.cells.length; c++) {
+                    columns += row.cells[c].colSpan;
+                }
+            }
+            return columns;
+        }
+
+        private getCurrentRows() {
+            return (this.element as HTMLTableElement).rows.length;
         }
 
         private targetTD: HTMLTableCellElement | undefined;
@@ -183,19 +235,22 @@ namespace ooo.de.element {
         private getTableMergeInfo(): CellInfo[][] {
             let data: (CellInfo | undefined)[][] = [];
 
+            const rows = this.getCurrentRows();
+            const columns = this.getCurrentColumns();
+
             // initialize table
-            for (let row = 0; row < this.rows; row++) {
+            for (let row = 0; row < rows; row++) {
                 let rowData: (CellInfo | undefined)[] = [];
                 data.push(rowData);
-                for (let column = 0; column < this.columns; column++) {
+                for (let column = 0; column < columns; column++) {
                     rowData.push(undefined);
                 }
             }
 
             // get information
-            for (let row = 0; row < this.rows; row++) {
+            for (let row = 0; row < rows; row++) {
                 let columnIndex = 0;
-                for (let column = 0; column < this.columns; column++) {
+                for (let column = 0; column < columns; column++) {
                     if (data[row][column] == undefined) {
                         let td = (this.element as HTMLTableElement).rows[row].cells[columnIndex] as HTMLTableCellElement;
                         for (let sr = 0; sr < td.rowSpan; sr++) {

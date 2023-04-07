@@ -2,7 +2,7 @@ html {
     --pane-size: 100px;
 }
 
-.pane-left {
+.pane-left>*:nth-child(1) {
     position: absolute;
     left: 0px;
     right: calc(100% - var(--pane-size));
@@ -10,7 +10,7 @@ html {
     bottom: 0px;
 }
 
-.pane-left-body {
+.pane-left>*:nth-child(2) {
     position: absolute;
     left: var(--pane-size);
     right: 0px;
@@ -18,7 +18,7 @@ html {
     bottom: 0px;
 }
 
-.pane-right {
+.pane-right>*:nth-child(1) {
     position: absolute;
     left: calc(100% - var(--pane-size));
     right: 0px;
@@ -26,7 +26,7 @@ html {
     bottom: 0px;
 }
 
-.pane-right-body {
+.pane-right>*:nth-child(2) {
     position: absolute;
     left: 0px;
     right: var(--pane-size);
@@ -34,7 +34,7 @@ html {
     bottom: 0px;
 }
 
-.pane-top {
+.pane-top>*:nth-child(1) {
     position: absolute;
     left: 0px;
     right: 0px;
@@ -42,15 +42,15 @@ html {
     bottom: calc(100% - var(--pane-size));
 }
 
-.pane-top-body {
+.pane-top>*:nth-child(2) {
     position: absolute;
     left: 0px;
     right: 0px;
     top: var(--pane-size);
-    width: 0px;
+    bottom: 0px;
 }
 
-.pane-bottom {
+.pane-bottom>*:nth-child(1) {
     position: absolute;
     left: 0px;
     right: 0px;
@@ -58,7 +58,7 @@ html {
     bottom: 0px;
 }
 
-.pane-bottom-body {
+.pane-bottom>*:nth-child(2) {
     position: absolute;
     left: 0px;
     right: 0px;

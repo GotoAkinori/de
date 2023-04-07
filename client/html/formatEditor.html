@@ -1,27 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Format Editor</title>
 
-    <link rel="stylesheet" href="../css/elements.css">
-    <link rel="stylesheet" href="../css/pane.css">
-    <link rel="stylesheet" href="../css/formatEditor.css">
-    <link rel="stylesheet" href="../css/menu.css">
+    <link rel="stylesheet" href="../css/elements.css" />
+    <link rel="stylesheet" href="../css/pane.css" />
+    <link rel="stylesheet" href="../css/formatEditor.css" />
+    <link rel="stylesheet" href="../css/menu.css" />
     <script src="../js/decc.js"></script>
-</head>
+  </head>
 
-<body onload="ooo.de.formatEditor.init_format();">
-    <div class="pane" id="toolbar">
-        <button id="menubutton"><img src="../image/menu.svg" alt="menu" width="12px"></button>
+  <body class="pane-right" onload="ooo.de.formatEditor.init_format();">
+    <div class="pane" id="propertyViewPane" style="--pane-size: 300px">
+      <div id="commonInfoView"></div>
+      <div id="propertyView"></div>
     </div>
-    <div class="pane" id="formatBody" contenteditable="true"></div>
-    <div class="pane" id="propertyViewPane">
-        <div id="commonInfoView"></div>
-        <div id="propertyView"></div>
+    <div class="pane-top" style="--pane-size: 300px">
+      <div class="pane" id="toolbar" style="--pane-size: 40px">TOOLS:</div>
+      <div
+        class="pane"
+        id="formatBody"
+        contenteditable="true"
+        style="--pane-size: 40px"
+      ></div>
     </div>
-</body>
-
+  </body>
 </html>

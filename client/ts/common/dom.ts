@@ -69,7 +69,7 @@ namespace ooo.de.common {
      * @param callback Callback function when the button is clicked
      * @param className class name of new button.
      */
-    export function addButton(parent: HTMLElement, caption: string, callback: () => void, className?: string) {
+    export function addButton(parent: HTMLElement, caption: string, callback: (ev: MouseEvent) => void, className?: string) {
         let button = addTag(parent, "button", className);
         button.addEventListener("click", callback);
         button.innerHTML = caption;

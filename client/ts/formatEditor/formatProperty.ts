@@ -6,36 +6,41 @@ namespace ooo.de.formatEditor {
             e.resetValue();
         }
     }
+
     export async function makeCommonInfoPane() {
         let commonInfoView = document.getElementById("commonInfoView") as HTMLDivElement;
-        let formBody = document.getElementById("formatBody") as HTMLDivElement;
 
         let root = new element.DEEPropertyRoot(commonInfoView, formatProperty);
-        let box = new element.DEEPropertyBox(root, "Format Information");
+
+        let boxFormatInfo = new element.DEEPropertyBox(root, "Format Information");
+
+        // Save/Load
+        new element.DEEPropertyItemButton(boxFormatInfo, "", "../image/save.svg", "Save format.", showSaveDialog);
+        new element.DEEPropertyItemButton(boxFormatInfo, "", "../image/load.svg", "Save format.", showLoadDialog);
 
         // Format name
-        let formatName = new element.DEEPropertyItemInput(box, "formatName", "Format Name", "Name of the format.");
+        let formatName = new element.DEEPropertyItemInput(boxFormatInfo, "formatName", "Format Name", "Name of the format.");
         formatPropertyListToReset.push(formatName);
 
         // Schema of format
-        let makeSchema = new element.DEEPropertyItemCheckBox(box, "makeSchema", "Make schema", "If you want to make schema of this format, please check this.", (v) => {
+        let makeSchema = new element.DEEPropertyItemCheckBox(boxFormatInfo, "makeSchema", "Make schema", "If you want to make schema of this format, please check this.", (v) => {
             if (v) {
                 schemaGroup.show();
             } else {
                 schemaGroup.hide();
             }
-        });
+        }, true);
         formatPropertyListToReset.push(makeSchema);
 
-        let schemaGroup = new element.DEEPropertyGroup(box, "", "Schema Information");
+        let schemaGroup = new element.DEEPropertyGroup(boxFormatInfo, "", "Schema Information");
         schemaGroup.hide();
 
-        let schemaName = new element.DEEPropertyItemInput(schemaGroup, "schemaName", "Schema name", "Set schema name. If empty, schema name is equals to format name.");
+        let schemaName = new element.DEEPropertyItemInput(schemaGroup, "schemaName", "Schema name", "Set schema name. If empty, schema name is format name.");
         formatPropertyListToReset.push(schemaName);
 
         let idProperty = new element.DEEPropertyItemSelect(schemaGroup, "idProperty",
             propertyNameList(),
-            "Document ID property", "Set id property name. If empty, id is random value.");
+            "Document ID property", "Set id property name. If empty, ID is random value.");
         {
             let updateIdProp = () => {
                 elementListUpdate();
@@ -47,7 +52,7 @@ namespace ooo.de.formatEditor {
         formatPropertyListToReset.push(idProperty);
 
         // Element List
-        let elementsSelect = new element.DEEPropertyItemSelect(box, "activeElement", [], "Elements", "Element list in this form.", (v) => {
+        let elementsSelect = new element.DEEPropertyItemSelect(boxFormatInfo, "activeElement", [], "Elements", "Element list in this form.", (v) => {
             let target = element.DEEElementBase.elementList.find(e => e.id == v);
             if (target) {
                 activate(target);

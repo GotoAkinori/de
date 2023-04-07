@@ -20,10 +20,10 @@ div {
 
 #toolbar {
     background-color: #224;
-    left: 0px;
+    /* left: 0px;
     top: 0px;
     right: var(--property-view-width);
-    height: var(--toolbar-height);
+    height: var(--toolbar-height); */
 }
 
 #toolbar button {
@@ -41,18 +41,18 @@ div {
     background-color: transparent;
 }
 
-#formatBody {
+/* #formatBody {
     left: 0px;
     top: var(--toolbar-height);
     right: var(--property-view-width);
     bottom: 0px;
-}
+} */
 
 #propertyViewPane {
-    left: calc(100% - var(--property-view-width));
+    /* left: calc(100% - var(--property-view-width));
     top: 0px;
     right: 0px;
-    bottom: 0px;
+    bottom: 0px; */
     padding: 5px;
     overflow-y: auto;
 }
@@ -178,7 +178,7 @@ div {
 }
 
 .prop-body {
-    padding: 5px;
+    padding: 5px 0px 0px 10px;
     box-sizing: border-box;
     width: 100%;
 }

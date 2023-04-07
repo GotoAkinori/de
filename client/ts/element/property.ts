@@ -77,11 +77,8 @@ namespace ooo.de.element {
         public constructor(parent: DEEPropertyBase, caption: string, description?: string) {
             super(parent, "", parent.data);
 
+            let div = common.addTag(parent.getBody(), "div", "property-name");
             this.body = common.addTag(parent.getBody(), "div", "prop-body");
-            this.body.style.padding = "0px";
-
-            let div = common.addTag(this.body, "div", "property-name");
-            div.style.padding = "0px";
             div.innerText = caption;
             if (description) { div.title = description; }
         }
@@ -194,27 +191,38 @@ namespace ooo.de.element {
     }
 
     export class DEEPropertyItemCheckBox extends DEEPropertyBase {
-        input: HTMLInputElement;
+        input!: HTMLInputElement;
         label: HTMLLabelElement;
-        public constructor(parent: DEEPropertyBase, public name: string, caption?: string, description?: string, onChange?: (value: boolean) => void) {
+        public constructor(parent: DEEPropertyBase, public name: string, caption?: string, description?: string, onChange?: (value: boolean) => void, setCheckBoxInRight: boolean = false) {
             super(parent, name, parent.data);
 
             let div = common.addTag(parent.getBody(), "div");
             this.label = common.addTag(div, "label");
 
-            this.input = common.addTag(this.label, "input");
-            this.input.style.marginLeft = "10px";
-            this.input.type = "checkbox";
-            this.input.addEventListener("change", () => {
-                this.data[name] = this.input.checked ? "1" : "0";
-                if (onChange) {
-                    onChange(this.input.checked);
-                }
-            });
-            this.input.checked = this.data[name] == "1";
+            let addCheckBox = () => {
+                this.input = common.addTag(this.label, "input");
+                this.input.type = "checkbox";
+                this.input.addEventListener("change", () => {
+                    this.data[name] = this.input.checked ? "1" : "0";
+                    if (onChange) {
+                        onChange(this.input.checked);
+                    }
+                });
+                this.input.checked = this.data[name] == "1";
+            }
 
-            let span = common.addTag(this.label, "span");
-            span.innerText = caption ?? name;
+            let addSpan = () => {
+                let span = common.addTag(this.label, "span");
+                span.innerText = caption ?? name;
+            }
+
+            if (setCheckBoxInRight) {
+                addSpan();
+                addCheckBox();
+            } else {
+                addCheckBox();
+                addSpan();
+            }
 
             if (description) {
                 div.title = description;
@@ -233,15 +241,14 @@ namespace ooo.de.element {
 
     export class DEEPropertyItemButton extends DEEPropertyBase {
         button: HTMLButtonElement;
-        public constructor(parent: DEEPropertyBase, caption: string, icon?: string, description?: string, onClick?: () => void) {
+        public constructor(parent: DEEPropertyBase, caption: string, icon?: string, description?: string, onClick?: (ev: MouseEvent) => void) {
             super(parent, "", parent.data);
 
-            this.button = common.addButton(parent.getBody(), "button", () => {
+            this.button = common.addButton(parent.getBody(), "button", (ev) => {
                 if (onClick) {
-                    onClick();
+                    onClick(ev);
                 }
             });
-            this.button.style.marginLeft = "10px";
             this.button.innerText = caption;
             this.button.title = description ?? "";
 

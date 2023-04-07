@@ -36,7 +36,6 @@ namespace ooo.de.element {
         public showProperty(pane: HTMLDivElement): DEEPropertyRoot {
             this.propertyRoot = new DEEPropertyRoot(pane, this.properties);
 
-            pane.innerHTML = "";
             let property = new element.DEEPropertyBox(this.propertyRoot, "Property");
             new element.DEEPropertyItemInput(property, "text", "Caption text", "Caption text of the button.", v => {
                 (this.element as HTMLInputElement).innerText = v;

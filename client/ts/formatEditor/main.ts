@@ -42,6 +42,11 @@ namespace ooo.de.formatEditor {
         AddDEE(new element.DeRadioFactory());
         AddDEE(new element.DeCommandButtonFactory());
         AddDEE(new element.DeDataViewFactory());
+        AddDEE(new element.DeStyleFactory(
+            "bold",
+            "<span style='font-weight:bold'>Bold</span>", {
+            fontWeight: "bold"
+        }));
     }
     //#endregion
 
@@ -51,7 +56,7 @@ namespace ooo.de.formatEditor {
         AddSystemDEE();
 
         element.DEEFactroyBase.onActive = activate;
-        document.getElementById("menubutton")!.addEventListener("click", showMenu);
+        // document.getElementById("menubutton")!.addEventListener("click", showMenu);
 
         makeCommonInfoPane();
     }
@@ -62,164 +67,8 @@ namespace ooo.de.formatEditor {
         let propertyView = document.getElementById("propertyView") as HTMLDivElement;
 
         if (activeProperty != element.id) {
+            propertyView.innerHTML = "";
             element.showProperty(propertyView);
-        }
-    }
-
-    function showMenu() {
-        let [base, back] = ooo.de.common.modal();
-        let button = document.getElementById("menubutton") as HTMLButtonElement;
-        base.style.top = button.getBoundingClientRect().bottom + "px";
-
-        // Save
-        const saveMenu = common.addTag(base, "div", "menu-item");
-        saveMenu.addEventListener("click", () => {
-            back.remove();
-            showSaveDialog();
-        });
-        saveMenu.innerText = "Save";
-
-        // Load
-        const loadMenu = common.addTag(base, "div", "menu-item");
-        loadMenu.addEventListener("click", () => {
-            back.remove();
-            showLoadDialog();
-        });
-        loadMenu.innerText = "Load";
-    }
-
-    function showSaveDialog() {
-        let [base, back] = ooo.de.common.modal();
-        base.style.top = "10px";
-        base.style.left = "10px";
-
-        common.addTextDiv(base, "Format Name");
-        let input = common.addTag(base, "input");
-        input.placeholder = "Format Name";
-        input.value = formatProperty.formatName || "";
-        input.focus();
-        common.addButton(base, "Save", async () => {
-            try {
-                await save(input.value);
-                back.remove();
-            } catch (ex) {
-                console.error(ex);
-            }
-        });
-    }
-
-    async function save(formatName: string) {
-        // Save Format
-        for (let elem of element.DEEElementBase.elementList) {
-            elem.objectToDataset();
-        }
-
-        let html = document.getElementById("formatBody")!.innerHTML;
-        try {
-            common.post(`${common.COMMAND_PATH}/format/save/${formatName}`, html, common.HH_CT_TEXT);
-        } catch (ex) {
-            console.error(ex);
-        }
-
-        // Save Schema
-        if (formatProperty.makeSchema == "1") {
-            try {
-                let schemaName = formatProperty.schemaName || formatName;
-                await common.post(`${common.COMMAND_PATH}/schema/save/${schemaName}`, JSON.stringify(getSchema()), common.HH_CT_JSON);
-            } catch (ex) {
-                console.error(ex);
-            }
-        }
-    }
-
-    async function showLoadDialog() {
-        let [base, back] = ooo.de.common.modal();
-        base.style.top = "10px";
-        base.style.left = "10px";
-
-        common.addTextDiv(base, "Format List");
-        let listDiv = common.addTag(base, "div");
-        let list = await common.postJson(`${common.COMMAND_PATH}/format/list/all`) as string[];
-        let selectedItem: HTMLDivElement | undefined = undefined;
-        let selectedFormatName: string = "";
-        for (let name of list) {
-            let formatName = name.substring(0, name.length - 4);
-            let listItem = common.addTextDiv(base, formatName, "menu-item");
-
-            listItem.addEventListener("click", () => {
-                if (selectedItem) {
-                    selectedItem.classList.remove("selected");
-                }
-                listItem.classList.add("selected");
-                selectedItem = listItem;
-                selectedFormatName = formatName;
-                loadButton.disabled = false;
-            });
-            listItem.addEventListener("dblclick", async () => {
-                try {
-                    await load(formatName);
-                    back.remove();
-                } catch (ex) {
-                    console.error(ex);
-                }
-            });
-        }
-
-        let loadButton = common.addButton(base, "Load", async () => {
-            try {
-                await load(selectedFormatName);
-                back.remove();
-            } catch (ex) {
-                console.error(ex);
-            }
-        });
-        loadButton.disabled = true;
-    }
-
-    async function load(formatName: string) {
-        let data = await common.post(`${common.COMMAND_PATH}/format/load/${formatName}`);
-
-        let formatBody = document.getElementById("formatBody") as HTMLDivElement;
-        formatBody.innerHTML = data;
-
-        let elements = formatBody.querySelectorAll(`*[data-deid]`);
-        elements.forEach(element => {
-            if (element instanceof HTMLElement) {
-                let defactory = DeeList.find(e => e.getType() == element!.dataset.detype);
-                if (defactory) {
-                    let dee = defactory.loadElement(element);
-                    dee.id = element.dataset["deid"] ?? "";
-                    setOnClickElementEvent(dee);
-                }
-            }
-        });
-
-        formatProperty.formatName = formatName;
-        onChangeFormProperty();
-    }
-
-    function setOnClickElementEvent(dee: element.DEEElementBase) {
-        switch (pageMode) {
-            case "format": {
-                dee.element.addEventListener("click", (ev) => {
-                    if (
-                        ev.target instanceof HTMLElement &&
-                        ev.target.closest("*[data-detype]") == dee.element
-                    ) {
-                        dee.onClickFormatMode(ev);
-                    }
-                });
-            } break;
-            case "view": {
-                dee.element.addEventListener("click", (ev) => {
-                    if (
-                        ev.target instanceof HTMLElement &&
-                        ev.target.closest("*[data-detype]") == dee.element
-                    ) {
-                        dee.onClickViewMode(ev);
-                    }
-                });
-            } break;
         }
     }
     //#endregion
@@ -261,6 +110,31 @@ namespace ooo.de.formatEditor {
             } catch (ex) {
                 console.error(ex);
             }
+        }
+    }
+
+    export function setOnClickElementEvent(dee: element.DEEElementBase) {
+        switch (pageMode) {
+            case "format": {
+                dee.element.addEventListener("click", (ev) => {
+                    if (
+                        ev.target instanceof HTMLElement &&
+                        ev.target.closest("*[data-detype]") == dee.element
+                    ) {
+                        dee.onClickFormatMode(ev);
+                    }
+                });
+            } break;
+            case "view": {
+                dee.element.addEventListener("click", (ev) => {
+                    if (
+                        ev.target instanceof HTMLElement &&
+                        ev.target.closest("*[data-detype]") == dee.element
+                    ) {
+                        dee.onClickViewMode(ev);
+                    }
+                });
+            } break;
         }
     }
 
