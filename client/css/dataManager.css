@@ -1,0 +1,43 @@
+#dataManager table button img {
+    width: 15px;
+    height: 15px;
+}
+
+#dataManager table button {
+    width: 30px;
+    height: 30px;
+    background-color: transparent;
+    border-radius: 20px;
+    margin: 2px;
+}
+
+#dataManager table {
+    border-collapse: collapse;
+    margin: 5px;
+}
+
+#dataManager table td {
+    border: 2px solid #888;
+    user-select: none;
+}
+
+#dataManager table thead td {
+    background-color: #228;
+}
+
+#dataManager table tbody tr:hover td {
+    background-color: #444;
+}
+
+#dataManager table button:hover {
+    background-color: #666;
+}
+
+#dataManager iframe {
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    margin: 0px;
+    padding: 0px;
+    border: 2px solid white;
+}

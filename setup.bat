@@ -5,5 +5,5 @@ call npm install
 
 REM make required directory
 mkdir .\data\format
-mkdir .\data\forms
+mkdir .\data\doc
 mkdir .\data\schema

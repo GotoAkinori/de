@@ -65,3 +65,15 @@ html {
     top: 0px;
     bottom: var(--pane-size);
 }
+
+.scroll {
+    overflow: auto;
+}
+
+.scroll-x {
+    overflow-x: auto;
+}
+
+.scroll-y {
+    overflow-y: auto;
+}

@@ -8,11 +8,6 @@ div {
     box-sizing: border-box;
 }
 
-:root {
-    --toolbar-height: 40px;
-    --property-view-width: 300px;
-}
-
 .pane {
     position: absolute;
     border: 2px solid #66A;
@@ -20,10 +15,6 @@ div {
 
 #toolbar {
     background-color: #224;
-    /* left: 0px;
-    top: 0px;
-    right: var(--property-view-width);
-    height: var(--toolbar-height); */
 }
 
 #toolbar button {

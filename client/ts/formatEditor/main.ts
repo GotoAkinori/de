@@ -1,4 +1,6 @@
 namespace ooo.de.formatEditor {
+    export const META_INFO_TAG_ID = "ooo_de_meta_tag";
+
     export let DeeList: element.DEEFactroyBase<any>[] = [];
     export let pageMode: "view" | "format";
     export let schema: { [key: string]: any };
@@ -61,6 +63,11 @@ namespace ooo.de.formatEditor {
         // document.getElementById("menubutton")!.addEventListener("click", showMenu);
 
         makeCommonInfoPane();
+
+        params = urlArgs();
+        if (params.format) {
+            load(params.format);
+        }
     }
 
     let activeProperty: string;
@@ -95,11 +102,22 @@ namespace ooo.de.formatEditor {
         AddSystemDEE();
 
         element.DEEFactroyBase.onActive = () => { };
-        load(params.format);
+        await load(params.format);
+
+        // get format info
+        let schemaName;
+        {
+            let metaInfo = document.getElementById(META_INFO_TAG_ID);
+            if (metaInfo && metaInfo.dataset.de_makeSchema == "1") {
+                schemaName = metaInfo.dataset.de_schemaName || params.format;
+            } else {
+                schemaName = params.format;
+            }
+        }
 
         if (params.id) {
             try {
-                let data = await common.postJson(`${common.COMMAND_PATH}/form/${params.format}/load/${params.id}`);
+                let data = await common.postJson(`${common.COMMAND_PATH}/doc/${schemaName}/load/${params.id}`);
 
                 for (let elem of element.DEEElementBase.elementList) {
                     if (elem.properties.name) {
@@ -113,6 +131,8 @@ namespace ooo.de.formatEditor {
                 console.error(ex);
             }
         }
+
+        postMessage("load-end");
     }
 
     export function setOnClickElementEvent(dee: element.DEEElementBase) {
@@ -157,9 +177,9 @@ namespace ooo.de.formatEditor {
 
         try {
             if (id) {
-                await common.post(`${common.COMMAND_PATH}/form/${schemaName}/update/${id}`, JSON.stringify(properties), common.HH_CT_JSON);
+                await common.post(`${common.COMMAND_PATH}/doc/${schemaName}/update/${id}`, JSON.stringify(properties), common.HH_CT_JSON);
             } else {
-                await common.post(`${common.COMMAND_PATH}/form/${schemaName}/create/`, JSON.stringify(properties), common.HH_CT_JSON);
+                await common.post(`${common.COMMAND_PATH}/doc/${schemaName}/create/`, JSON.stringify(properties), common.HH_CT_JSON);
             }
         } catch (ex) {
             console.error(ex);

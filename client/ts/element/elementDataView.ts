@@ -110,7 +110,7 @@ namespace ooo.de.element {
                 let dataList: {
                     id: string,
                     data: any
-                }[] = await common.postJson(`${common.COMMAND_PATH}/form/${this.properties.data}/getAll`)
+                }[] = await common.postJson(`${common.COMMAND_PATH}/doc/${this.properties.data}/getAll`)
 
                 // Clear data
                 this.tbody.innerHTML = "";
@@ -190,32 +190,26 @@ namespace ooo.de.element {
         private setButton(td: HTMLTableCellElement, id: string) {
             // Remove Button
             if (this.properties.button_remove == "1") {
-                let removeButton = common.addButton(td, "", async () => {
-                    let result = await common.postJson(`${common.COMMAND_PATH}/form/${this.properties.format}/remove/${id}`)
+                common.addImageButton(td, "../image/cross.svg", async () => {
+                    let result = await common.postJson(`${common.COMMAND_PATH}/doc/${this.properties.format}/remove/${id}`)
                     if (result.result) {
                         td.parentElement?.remove();
                     }
                 });
-                let img = common.addTag(removeButton, "img");
-                img.src = "../image/cross.svg";
             }
 
             // View Button
             if (this.properties.button_view == "1") {
-                let viewButton = common.addButton(td, "", async () => {
+                common.addImageButton(td, "../image/view.svg", async () => {
                     window.open(`./viewer.html?format=${this.properties.data}&id=${id}&readonly=1`);
                 });
-                let img = common.addTag(viewButton, "img");
-                img.src = "../image/view.svg";
             }
 
             // Edit Button
             if (this.properties.button_edit == "1") {
-                let editButton = common.addButton(td, "", async () => {
+                common.addImageButton(td, "../image/edit.svg", async () => {
                     window.open(`./viewer.html?format=${this.properties.data}&id=${id}`);
                 });
-                let img = common.addTag(editButton, "img");
-                img.src = "../image/edit.svg";
             }
         }
     }

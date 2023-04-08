@@ -15,6 +15,7 @@ application.use(conf.url + "/command/format/save/:format", async (req, res) => {
         await commandFormat.commandSave(req.params.format, req.body);
         res.send();
     } catch (ex) {
+        console.trace(ex);
         res.sendStatus(500);
     }
 });
@@ -22,6 +23,7 @@ application.use(conf.url + "/command/format/load/:format", async (req, res) => {
     try {
         res.send(await commandFormat.commandLoad(req.params.format));
     } catch (ex) {
+        console.trace(ex);
         res.sendStatus(500);
     }
 });
@@ -29,48 +31,65 @@ application.use(conf.url + "/command/format/list/", async (req, res) => {
     try {
         res.send(await commandFormat.commandList());
     } catch (ex) {
+        console.trace(ex);
         res.sendStatus(500);
     }
 });
-application.use(conf.url + "/command/form/:format/create/", async (req, res) => {
+
+application.use(conf.url + "/command/format/docList/", async (req, res) => {
+    try {
+        res.send(await commandFormat.commandDocList());
+    } catch (ex) {
+        console.trace(ex);
+        res.sendStatus(500);
+    }
+});
+
+application.use(conf.url + "/command/doc/:format/create/", async (req, res) => {
     try {
         res.send(await commandForm.commandCreate(req.params.format, req.body));
     } catch (ex) {
+        console.trace(ex);
         res.sendStatus(500);
     }
 });
-application.use(conf.url + "/command/form/:format/update/:id", async (req, res) => {
+application.use(conf.url + "/command/doc/:format/update/:id", async (req, res) => {
     try {
         res.send(await commandForm.commandUpdate(req.params.format, req.body, req.params.id));
     } catch (ex) {
+        console.trace(ex);
         res.sendStatus(500);
     }
 });
-application.use(conf.url + "/command/form/:format/load/:id", async (req, res) => {
+application.use(conf.url + "/command/doc/:format/load/:id", async (req, res) => {
     try {
         res.send(await commandForm.commandLoad(req.params.format, req.params.id));
     } catch (ex) {
+        console.trace(ex);
         res.sendStatus(500);
     }
 });
-application.use(conf.url + "/command/form/:format/remove/:id", async (req, res) => {
+application.use(conf.url + "/command/doc/:format/remove/:id", async (req, res) => {
     try {
         res.send(await commandForm.commandRemove(req.params.format, req.params.id));
     } catch (ex) {
+        console.trace(ex);
         res.sendStatus(500);
     }
 });
-application.use(conf.url + "/command/form/:format/list/:id", async (req, res) => {
+application.use(conf.url + "/command/doc/:format/list/:id", async (req, res) => {
     try {
         res.send(await commandForm.commandDataList(req.params.format));
     } catch (ex) {
+        console.trace(ex);
         res.sendStatus(500);
     }
 });
-application.use(conf.url + "/command/form/:format/getAll", async (req, res) => {
+application.use(conf.url + "/command/doc/:format/getAll", async (req, res) => {
     try {
         res.send(await commandForm.commandGetAllData(req.params.format));
     } catch (ex) {
+        console.trace(ex);
         res.sendStatus(500);
     }
 });
@@ -79,6 +98,7 @@ application.use(conf.url + "/command/schema/save/:name", async (req, res) => {
         await commandSchema.commandSave(req.params.name, req.body);
         res.send();
     } catch (ex) {
+        console.trace(ex);
         res.sendStatus(500);
     }
 });
@@ -86,6 +106,7 @@ application.use(conf.url + "/command/schema/load/:name", async (req, res) => {
     try {
         res.send(await commandSchema.commandLoad(req.params.name));
     } catch (ex) {
+        console.trace(ex);
         res.sendStatus(500);
     }
 });
@@ -93,6 +114,7 @@ application.use(conf.url + "/command/schema/list/", async (req, res) => {
     try {
         res.send(await commandSchema.commandList());
     } catch (ex) {
+        console.trace(ex);
         res.sendStatus(500);
     }
 });

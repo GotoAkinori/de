@@ -10,10 +10,12 @@ namespace ooo.de.common {
                 if (xhr.status == 200) {
                     res(xhr.responseText);
                 } else {
+                    console.error(url);
                     rej(xhr);
                 }
             });
             xhr.addEventListener("error", (err) => {
+                console.error(url);
                 rej(err);
             });
             if (headers) {

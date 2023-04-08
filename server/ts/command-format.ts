@@ -18,4 +18,7 @@ export async function commandList(): Promise<any> {
     return await fs.readdir(`./data/format/`);
 }
 
+export async function commandDocList(): Promise<any> {
+    return await fs.readdir(`./data/doc/`);
+}
 

@@ -352,7 +352,7 @@ namespace ooo.de.element {
             let div = common.addTag(tr.firstChild as HTMLTableRowElement, "div");
 
             // up button
-            let upButton = common.addButton(div, "", () => {
+            common.addImageButton(div, "../image/upArrow.svg", () => {
                 if (tr.rowIndex > 1) {
                     this.tbody.insertBefore(tr, tr.previousSibling);
                 }
@@ -361,11 +361,9 @@ namespace ooo.de.element {
                     this.onChange();
                 }
             });
-            let upImg = common.addTag(upButton, "img");
-            upImg.src = "../image/upArrow.svg";
 
             // down button
-            let downButton = common.addButton(div, "", () => {
+            common.addImageButton(div, "../image/downArrow.svg", () => {
                 if (tr.rowIndex < this.tbody.rows.length) {
                     this.tbody.insertBefore(tr, tr.nextElementSibling!.nextElementSibling);
                 }
@@ -374,19 +372,15 @@ namespace ooo.de.element {
                     this.onChange();
                 }
             });
-            let downImg = common.addTag(downButton, "img");
-            downImg.src = "../image/downArrow.svg";
 
             // remove button
-            let removeButton = common.addButton(div, "", () => {
+            common.addImageButton(div, "../image/cross.svg", () => {
                 tr.remove();
                 this.getValue();
                 if (this.onChange) {
                     this.onChange();
                 }
             });
-            let removeImg = common.addTag(removeButton, "img");
-            removeImg.src = "../image/cross.svg";
         }
 
         public setValue(data: any) {

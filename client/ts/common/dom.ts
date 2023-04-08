@@ -76,6 +76,14 @@ namespace ooo.de.common {
         return button;
     }
 
+    export function addImageButton(parent: HTMLElement, image: string, callback: (ev: MouseEvent) => void, className?: string) {
+        let button = addTag(parent, "button", className);
+        button.addEventListener("click", callback);
+        let imageTag = addTag(button, "img");
+        imageTag.src = image;
+        return button;
+    }
+
     export function addTR(
         parent: HTMLTableElement | HTMLTableSectionElement,
         columns: number, trClassName?: string, tdClassName?: string

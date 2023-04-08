@@ -1,6 +1,4 @@
 namespace ooo.de.formatEditor {
-    const META_INFO_TAG_ID = "ooo_de_meta_tag";
-
     export function showSaveDialog(ev: MouseEvent) {
         let [base, back] = ooo.de.common.modal();
 

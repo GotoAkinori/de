@@ -5,10 +5,10 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Client(formatEditor)",
+            "name": "Client(dataManager)",
             "request": "launch",
             "type": "chrome",
-            "url": "http://localhost:3000/dee/client/html/formatEditor.html",
+            "url": "http://localhost:3000/dee/client/html/dataManager.html",
             "webRoot": "${workspaceFolder}"
         },
         {
