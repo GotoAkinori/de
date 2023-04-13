@@ -7,9 +7,8 @@ namespace ooo.de.formatEditor {
         }
     }
 
-    export async function makeCommonInfoPane() {
+    export async function initFormatProperty() {
         let commonInfoView = document.getElementById("commonInfoView") as HTMLDivElement;
-
         let root = new element.DEEPropertyRoot(commonInfoView, formatProperty);
 
         let boxFormatInfo = new element.DEEPropertyBox(root, "Format Information");

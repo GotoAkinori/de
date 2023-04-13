@@ -9,21 +9,26 @@
     <link rel="stylesheet" href="../css/pane.css" />
     <link rel="stylesheet" href="../css/formatEditor.css" />
     <link rel="stylesheet" href="../css/menu.css" />
+    <link rel="stylesheet" href="../css/tab.css" />
     <script src="../js/decc.js"></script>
   </head>
 
   <body class="pane-right" onload="ooo.de.formatEditor.init_format();">
-    <div class="pane" id="propertyViewPane" style="--pane-size: 300px">
-      <div id="commonInfoView"></div>
-      <div id="propertyView"></div>
-    </div>
-    <div class="pane-top" style="--pane-size: 300px">
-      <div class="pane" id="toolbar" style="--pane-size: 40px">TOOLS:</div>
+    <div
+      class="pane pane-tab"
+      id="propertyViewPane"
+      style="--pane-size: 400px"
+    ></div>
+    <div class="pane-top" style="--pane-size: 400px">
+      <div class="pane scroll-y" id="toolbar" style="--pane-size: 100px">
+        <div id="toolbar-data" style="width: 100%">Data:</div>
+        <div id="toolbar-others" style="width: 100%">Others:</div>
+      </div>
       <div
         class="pane"
         id="formatBody"
         contenteditable="true"
-        style="--pane-size: 40px"
+        style="--pane-size: 100px"
       ></div>
     </div>
   </body>

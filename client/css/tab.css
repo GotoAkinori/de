@@ -1,0 +1,108 @@
+html {
+    --tab-header-size: 40px;
+    --tab-button-margin: 2px;
+}
+
+.pane-tab>div.head-area {
+    overflow: hidden;
+    position: absolute;
+    width: 100%;
+    height: var(--tab-header-size);
+}
+
+.pane-tab>div.head-area>div.head-area-scroll {
+    overflow: hidden;
+    position: absolute;
+    left: var(--tab-header-size);
+    right: var(--tab-header-size);
+    height: 100%;
+}
+
+.pane-tab>div.head-area>div.head-area-scroll>div.head-area-items {
+    overflow: visible;
+    position: absolute;
+    height: 100%;
+}
+
+.pane-tab>div.head-area>div.head-area-scroll>div.head-area-items>.tab-head-item {
+    overflow: hidden;
+    box-sizing: border-box;
+    border: 1px solid #88C;
+    height: var(--tab-header-size);
+    color: white;
+    text-align: center;
+    font-weight: bold;
+    margin: 0px;
+    user-select: none;
+    display: inline-block;
+    top: 0px;
+    bottom: 0px;
+    padding: 2px 20px;
+}
+
+.pane-tab>div.head-area>div.head-area-scroll>div.head-area-items>.tab-head-item.active {
+    background-color: #668;
+    border-bottom: 4px solid #CCF;
+}
+
+.pane-tab>div.head-area>div.head-area-scroll>div.head-area-items>.tab-head-item:hover {
+    background-color: #668;
+}
+
+.pane-tab>div.head-area>button.tab-button {
+    position: absolute;
+    opacity: 0.2;
+    margin: var(--tab-button-margin);
+    width: calc(var(--tab-header-size) - var(--tab-button-margin) * 2);
+    height: calc(var(--tab-header-size) - var(--tab-button-margin) * 2);
+    z-index: 1;
+}
+
+.pane-tab>div.head-area>button.tab-button>img {
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+.pane-tab>div.head-area>button.tab-button:hover {
+    opacity: 0.8;
+}
+
+.pane-tab>div.head-area>button.tab-button.left {
+    left: 0px;
+    /* float: left; */
+}
+
+.pane-tab>div.head-area>button.tab-button.right {
+    right: 0px;
+    /* float: right; */
+}
+
+.pane-tab>div.body-area {
+    overflow: hidden;
+    position: absolute;
+    box-sizing: border-box;
+    border: 1px solid #88C;
+    top: var(--tab-header-size);
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+}
+
+.pane-tab>div.body-area>.tab-item {
+    display: none;
+}
+
+.pane-tab>div.body-area>.tab-item.active {
+    overflow: hidden;
+    position: absolute;
+    box-sizing: border-box;
+    border: 1px solid #88C;
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    color: white;
+    font-weight: bold;
+    display: block;
+}

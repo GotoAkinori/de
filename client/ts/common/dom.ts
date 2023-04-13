@@ -6,19 +6,25 @@ namespace ooo.de.common {
      * @param tagName tag name of new element.
      * @param className class name of new element.
      */
-    export function addTag<T extends keyof HTMLElementTagNameMap>(parent: HTMLElement, tagName: T, className?: string): HTMLElementTagNameMap[T] {
+    export function addTag<T extends keyof HTMLElementTagNameMap>(parent: HTMLElement, tagName: T, className?: string | string[]): HTMLElementTagNameMap[T] {
         let doc = parent.ownerDocument ?? document;
         let element = doc.createElement(tagName);
         parent.appendChild(element);
 
         if (className) {
-            element.classList.add(className);
+            if (Array.isArray(className)) {
+                for (let classNameItem of className) {
+                    element.classList.add(classNameItem);
+                }
+            } else {
+                element.classList.add(className);
+            }
         }
 
         return element;
     }
 
-    export function addTextDiv(parent: HTMLElement, text: string, className?: string): HTMLDivElement {
+    export function addTextDiv(parent: HTMLElement, text: string, className?: string | string[]): HTMLDivElement {
         let div = addTag(parent, "div", className);
         div.innerText = text;
         return div;
@@ -30,15 +36,22 @@ namespace ooo.de.common {
      * @param tagName tag name of new element.
      * @param className class name of new element.
      */
-    export function insertTagBefore<T extends keyof HTMLElementTagNameMap>(target: HTMLElement, tagName: T, className?: string): HTMLElementTagNameMap[T] {
+    export function insertTagBefore<T extends keyof HTMLElementTagNameMap>(target: Node, tagName: T, className?: string | string[]): HTMLElementTagNameMap[T] {
         let doc = target.ownerDocument ?? document;
         let parent = target.parentElement;
         let element = doc.createElement(tagName);
         parent?.insertBefore(element, target);
 
         if (className) {
-            element.classList.add(className);
+            if (Array.isArray(className)) {
+                for (let classNameItem of className) {
+                    element.classList.add(classNameItem);
+                }
+            } else {
+                element.classList.add(className);
+            }
         }
+
 
         return element;
     }
@@ -49,14 +62,20 @@ namespace ooo.de.common {
      * @param tagName tag name of new element.
      * @param className class name of new element.
      */
-    export function insertTagAfter<T extends keyof HTMLElementTagNameMap>(target: HTMLElement, tagName: T, className?: string): HTMLElementTagNameMap[T] {
+    export function insertTagAfter<T extends keyof HTMLElementTagNameMap>(target: Node, tagName: T, className?: string | string[]): HTMLElementTagNameMap[T] {
         let doc = target.ownerDocument ?? document;
         let parent = target.parentElement;
         let element = doc.createElement(tagName);
         parent?.insertBefore(element, target.nextSibling);
 
         if (className) {
-            element.classList.add(className);
+            if (Array.isArray(className)) {
+                for (let classNameItem of className) {
+                    element.classList.add(classNameItem);
+                }
+            } else {
+                element.classList.add(className);
+            }
         }
 
         return element;
@@ -69,14 +88,14 @@ namespace ooo.de.common {
      * @param callback Callback function when the button is clicked
      * @param className class name of new button.
      */
-    export function addButton(parent: HTMLElement, caption: string, callback: (ev: MouseEvent) => void, className?: string) {
+    export function addButton(parent: HTMLElement, caption: string, callback: (ev: MouseEvent) => void, className?: string | string[]) {
         let button = addTag(parent, "button", className);
         button.addEventListener("click", callback);
         button.innerHTML = caption;
         return button;
     }
 
-    export function addImageButton(parent: HTMLElement, image: string, callback: (ev: MouseEvent) => void, className?: string) {
+    export function addImageButton(parent: HTMLElement, image: string, callback: (ev: MouseEvent) => void, className?: string | string[]) {
         let button = addTag(parent, "button", className);
         button.addEventListener("click", callback);
         let imageTag = addTag(button, "img");
@@ -95,6 +114,105 @@ namespace ooo.de.common {
         }
 
         return [tr, tds];
+    }
+
+    //#endregion
+
+    //#region Tab
+    type TabItemInfo = {
+        caption: string,
+        name: string,
+        htmlID?: string
+    }
+
+    const scrollWidth = 40;
+
+    export class TabView {
+        private headArea: HTMLDivElement;
+        private headAreaScroll: HTMLDivElement;
+        private bodyArea: HTMLDivElement;
+        private items: {
+            name: string,
+            header: HTMLSpanElement,
+            body: HTMLDivElement
+        }[] = [];
+
+        public constructor(private parent: HTMLElement, tabItemInfoList: TabItemInfo[]) {
+            parent.classList.add("pane-tab");
+            let headAreaTop = addTag(parent, "div", "head-area");
+            this.headAreaScroll = addTag(headAreaTop, "div", "head-area-scroll");
+            this.headArea = addTag(this.headAreaScroll, "div", "head-area-items");
+            this.bodyArea = addTag(parent, "div", "body-area");
+
+            addImageButton(headAreaTop, "../image/leftArrow.svg", () => {
+                this.headAreaScroll.scrollBy({
+                    left: -scrollWidth
+                });
+            }, ["tab-button", "left"]);
+            addImageButton(headAreaTop, "../image/rightArrow.svg", () => {
+                this.headAreaScroll.scrollBy({
+                    left: scrollWidth
+                });
+            }, ["tab-button", "right"]);
+
+            for (let tabItemInfo of tabItemInfoList) {
+                this.addTabItem(tabItemInfo);
+            }
+
+            if (tabItemInfoList.length > 0) {
+                this.activateTabItem(tabItemInfoList[0].name, false);
+            }
+            this.adjustHeaderSize();
+        }
+
+        public addTabItem(tabItemInfo: TabItemInfo) {
+            // add header
+            let header = addTag(this.headArea, "span", "tab-head-item");
+            header.innerHTML = tabItemInfo.caption;
+
+            // add body
+            let body = addTag(this.bodyArea, "div", "tab-item");
+            if (tabItemInfo.htmlID) {
+                body.id = tabItemInfo.htmlID;
+            }
+
+            // click event
+            header.addEventListener("click", () => {
+                this.activateTabItem(tabItemInfo.name);
+            });
+
+            // add tab item
+            this.items.push({
+                name: tabItemInfo.name,
+                header: header,
+                body: body
+            });
+
+        }
+
+        public getTabItem(name: string): HTMLDivElement | undefined {
+            return this.items.find(v => v.name == name)?.body
+        }
+
+        public activateTabItem(name: string, adjust: boolean = true) {
+            for (let item of this.items) {
+                if (item.name == name) {
+                    item.header.classList.add("active");
+                    item.body.classList.add("active");
+                } else {
+                    item.header.classList.remove("active");
+                    item.body.classList.remove("active");
+                }
+            }
+
+            if (adjust) {
+                this.adjustHeaderSize();
+            }
+        }
+
+        private adjustHeaderSize() {
+            this.headArea.style.width = this.items.reduce((p, v) => p + v.header.offsetWidth, 5) + "px";
+        }
     }
 
     //#endregion
@@ -150,6 +268,17 @@ namespace ooo.de.common {
                 properties[key2] = element.dataset[key] ?? "";
             }
         }
+    }
+
+    export function isChildOf(c: Node, p: Node): boolean {
+        let cur = c.parentNode;
+        while (cur != null) {
+            if (cur == p) {
+                return true;
+            }
+            cur = cur.parentNode;
+        }
+        return false;
     }
 
     //#endregion

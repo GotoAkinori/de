@@ -11,14 +11,13 @@ namespace ooo.de.formatEditor {
      * Add new DEEBase element.
      * @param factory New DEEBase element.
      */
-    function AddDEE(factory: element.DEEFactroyBase<any>) {
+    function AddDEE(factory: element.DEEFactroyBase<any>, parent: HTMLDivElement) {
         DeeList.push(factory);
 
         if (pageMode == "format") {
-            let toolbarPane = document.getElementById("toolbar") as HTMLDivElement;
             let formatBody = document.getElementById("formatBody") as HTMLDivElement;
 
-            factory.makeToolButton(common.addButton(toolbarPane, "", () => {
+            factory.makeToolButton(common.addButton(parent, "", () => {
                 let selection = document.getSelection();
 
                 if (selection && selection.rangeCount > 0) {
@@ -39,18 +38,19 @@ namespace ooo.de.formatEditor {
     }
 
     function AddSystemDEE() {
-        AddDEE(new element.DeInputFactory());
-        AddDEE(new element.DeTableFactory());
-        AddDEE(new element.DeSelectFactory());
-        AddDEE(new element.DeRadioFactory());
-        AddDEE(new element.DeCommandButtonFactory());
-        AddDEE(new element.DeDataViewFactory());
-        AddDEE(new element.DeStyleFactory(
-            "bold",
-            "<span style='font-weight:bold'>Bold</span>", {
-            fontWeight: "bold"
-        }));
-        AddDEE(new element.DeFileFactory());
+        let toolbarData = document.getElementById("toolbar-data") as HTMLDivElement;
+        let toolbarOthers = document.getElementById("toolbar-others") as HTMLDivElement;
+        
+        // Data elements
+        AddDEE(new element.DeInputFactory(), toolbarData);
+        AddDEE(new element.DeSelectFactory(), toolbarData);
+        AddDEE(new element.DeRadioFactory(), toolbarData);
+        AddDEE(new element.DeFileFactory(), toolbarData);
+
+        // Other elements
+        AddDEE(new element.DeCommandButtonFactory(), toolbarOthers);
+        AddDEE(new element.DeTableFactory(), toolbarOthers);
+        AddDEE(new element.DeDataViewFactory(), toolbarOthers);
     }
     //#endregion
 
@@ -60,9 +60,11 @@ namespace ooo.de.formatEditor {
         AddSystemDEE();
 
         element.DEEFactroyBase.onActive = activate;
-        // document.getElementById("menubutton")!.addEventListener("click", showMenu);
 
-        makeCommonInfoPane();
+        makePropertyTab();
+
+        initFormatProperty();
+        initStyleView();
 
         params = urlArgs();
         if (params.format) {
@@ -79,6 +81,23 @@ namespace ooo.de.formatEditor {
             propertyView.innerHTML = "";
             element.showProperty(propertyView);
         }
+    }
+
+    function makePropertyTab() {
+        let parent = document.getElementById("propertyViewPane") as HTMLDivElement;
+        let propertyTab = new common.TabView(parent, [{
+            caption: "Format",
+            name: "format",
+            htmlID: "commonInfoView"
+        }, {
+            caption: "Data",
+            name: "data",
+            htmlID: "propertyView"
+        }, {
+            caption: "Style",
+            name: "style",
+            htmlID: "styleView"
+        }]);
     }
     //#endregion
 
