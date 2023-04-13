@@ -94,7 +94,7 @@ html {
 }
 
 .pane-tab>div.body-area>.tab-item.active {
-    overflow: hidden;
+    overflow-y: auto;
     position: absolute;
     box-sizing: border-box;
     border: 1px solid #88C;

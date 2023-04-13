@@ -119,7 +119,7 @@ namespace ooo.de.element {
             }
         }
         public setValue(data: any) {
-            this.input.value = data[this.name] ?? "";
+            this.input.value = data[this.name] ?? (this.input.type == "color" ? "#FFFFFF" : "");
         }
         public getValue(): void {
             this.data[this.name] = this.input.value;
