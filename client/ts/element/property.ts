@@ -427,4 +427,33 @@ namespace ooo.de.element {
             throw new Error("Method not implemented.");
         }
     }
+
+    export class DEEPropertyItemFile extends DEEPropertyBase {
+        input: HTMLInputElement;
+        public constructor(parent: DEEPropertyBase, public name: string, caption?: string, description?: string, onChange?: (value: string) => void, type?: string) {
+            super(parent, name, parent.data);
+
+            let div = common.addTag(parent.getBody(), "div", "property-name");
+            div.innerText = caption ?? name;
+            if (description) { div.title = description; }
+
+            this.input = common.addTag(parent.getBody(), "input");
+            this.input.style.marginLeft = "10px";
+            this.input.value = this.data[name] ?? "";
+            this.input.addEventListener("change", () => {
+                if (onChange) {
+                    onChange(this.input.value);
+                }
+            });
+            this.input.type = "file";
+            if (type) {
+                this.input.type = type;
+            }
+        }
+        public getValue(): void { }
+        public setValue(data: any): void { }
+        public getBody(): HTMLDivElement {
+            throw new Error("Method not implemented.");
+        }
+    }
 }

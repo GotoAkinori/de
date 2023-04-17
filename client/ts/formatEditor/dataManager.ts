@@ -1,7 +1,9 @@
 namespace ooo.de.formatEditor {
     export function init_datamanager() {
-        let formatHead = document.getElementById("formatHead") as HTMLTableSectionElement;
-        let formatBody = document.getElementById("formatBody") as HTMLTableSectionElement;
+        let formatTableHead = document.getElementById("formatTableHead") as HTMLTableSectionElement;
+        let formatTableBody = document.getElementById("formatTableBody") as HTMLTableSectionElement;
+        let formatTableNew = document.getElementById("formatTableNew") as HTMLTableSectionElement;
+
         let dataHead = document.getElementById("dataHead") as HTMLTableSectionElement;
         let dataBody = document.getElementById("dataBody") as HTMLTableSectionElement;
 
@@ -21,18 +23,18 @@ namespace ooo.de.formatEditor {
         });
 
         async function makeFormatTable() {
-            formatHead.innerHTML = "";
-            formatBody.innerHTML = "";
+            formatTableHead.innerHTML = "";
+            formatTableBody.innerHTML = "";
 
             // header
-            let [, [, h_item]] = common.addTR(formatHead, 2);
+            let [, [, h_item]] = common.addTR(formatTableHead, 2);
             h_item.innerText = "Format/Schema";
 
             // body
             let list = await common.postJson(`${common.COMMAND_PATH}/format/list/`) as string[];
             for (let item of list) {
                 let format = item.substring(0, item.length - 4);
-                let [, [d_tool, d_item]] = common.addTR(formatBody, 2);
+                let [, [d_tool, d_item]] = common.addTR(formatTableBody, 2);
                 d_item.innerText = format;
 
                 // open button
@@ -127,5 +129,9 @@ namespace ooo.de.formatEditor {
                 }
             });
         }
+
+        formatTableNew.addEventListener("click", () => {
+            open("./formatEditor.html");
+        });
     }
 }

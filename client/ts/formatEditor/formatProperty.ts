@@ -55,50 +55,6 @@ namespace ooo.de.formatEditor {
             idProperty.select.addEventListener("key", updateIdProp);
         }
         formatPropertyList.push(idProperty);
-
-        // Element List
-        let elementsSelect = new element.DEEPropertyItemSelect(boxFormatInfo, "activeElement", [], "Elements", "Element list in this form.", (v) => {
-            let target = element.DEEElementBase.elementList.find(e => e.id == v);
-            if (target) {
-                activate(target);
-            }
-        });
-        formatPropertyList.push(elementsSelect);
-
-        async function update() {
-            elementListUpdate();
-            elementsSelect.setOptions(
-                element.DEEElementBase.elementList.map(e => {
-                    return {
-                        value: e.id,
-                        caption: e.properties.name || e.id,
-                        tooltip: e.properties.description || e.properties.name || e.id
-                    }
-                })
-            );
-        }
-
-        elementsSelect.select.addEventListener("click", update);
-        elementsSelect.select.addEventListener("keydown", update);
-        elementsSelect.select.addEventListener("change", () => {
-            let id = elementsSelect.select.value;
-            let target = element.DEEElementBase.elementList.find(e => e.id == id);
-            if (target) {
-                activate(target);
-            }
-        });
-    }
-
-    function elementListUpdate() {
-        let formBody = document.getElementById("formatBody") as HTMLDivElement;
-        for (let i = 0; i < element.DEEElementBase.elementList.length;) {
-            let e = element.DEEElementBase.elementList[i];
-            if (!formBody.querySelector(`*[data-deid="${e.id}"]`)) {
-                element.DEEElementBase.elementList.splice(i, 1);
-            } else {
-                i++
-            }
-        }
     }
 
     function propertyNameList() {

@@ -9,6 +9,7 @@ namespace ooo.de.element {
             DEEElementBase.elementList.push(this);
             common.datasetToObject(element, this.properties);
         }
+
         // Functions for "Form Create Mode"
         public abstract deleteElement(): void;
         public abstract showProperty(pane: HTMLDivElement): DEEPropertyRoot;
@@ -19,6 +20,7 @@ namespace ooo.de.element {
             }
         }
         public getSchema(schema: { [name: string]: any }): void { }
+        public onAfterCreate(): void { }
 
         // Functions for "View Mode"
         public abstract getFormData(data: any): Promise<void>;

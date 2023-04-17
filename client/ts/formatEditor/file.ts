@@ -52,9 +52,9 @@ namespace ooo.de.formatEditor {
             let metaInfo = document.getElementById(META_INFO_TAG_ID);
             if (!metaInfo) {
                 let formatBody = document.getElementById("formatBody")!;
-                formatBody.contentEditable = "false";
                 metaInfo = common.addTag(formatBody, "div");
                 metaInfo.id = META_INFO_TAG_ID;
+                metaInfo.contentEditable = "false";
             }
             common.objectToDataset(metaInfo, formatProperty);
         }
@@ -161,12 +161,7 @@ namespace ooo.de.formatEditor {
         let elements = formatBody.querySelectorAll(`*[data-deid]`);
         elements.forEach(element => {
             if (element instanceof HTMLElement) {
-                let defactory = DeeList.find(e => e.getType() == element!.dataset.detype);
-                if (defactory) {
-                    let dee = defactory.loadElement(element);
-                    dee.id = element.dataset["deid"] ?? "";
-                    setOnClickElementEvent(dee);
-                }
+                loadElement(element);
             }
         });
 

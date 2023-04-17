@@ -41,3 +41,14 @@
     padding: 0px;
     border: 2px solid white;
 }
+
+#formatTableNew {
+    margin: 5px;
+    color: white;
+    font-size: 20px;
+    background-color: transparent;
+}
+
+#formatTableNew:hover {
+    background-color: #444;
+}

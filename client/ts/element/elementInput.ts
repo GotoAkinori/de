@@ -28,7 +28,7 @@ namespace ooo.de.element {
     export class DeInput extends DEEElementBase {
         public propertyRoot: DEEPropertyRoot | null = null;
 
-        public async getFormData(data: any): Promise<void>  {
+        public async getFormData(data: any): Promise<void> {
             if (this.properties.name) {
                 data[this.properties.name] = (this.element as HTMLInputElement).value;
             }
@@ -73,6 +73,10 @@ namespace ooo.de.element {
             schema[this.properties.name] = {
                 type: "text"
             }
+        }
+
+        public onAfterCreate(): void {
+            this.properties.name = this.id;
         }
     }
 }

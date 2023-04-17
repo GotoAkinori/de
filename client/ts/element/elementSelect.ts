@@ -97,5 +97,9 @@ namespace ooo.de.element {
                 optionsCaption: JSON.parse(this.properties.options).map((v: any) => v.caption)
             }
         }
+
+        public onAfterCreate(): void {
+            this.properties.name = this.id;
+        }
     }
 }

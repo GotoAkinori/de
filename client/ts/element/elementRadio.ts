@@ -54,7 +54,7 @@ namespace ooo.de.element {
             }
         }
 
-        public async getFormData(data: any): Promise<void>  {
+        public async getFormData(data: any): Promise<void> {
             if (this.radioElement.checked) {
                 data[this.properties.name] = this.properties.value;
             }
@@ -71,7 +71,7 @@ namespace ooo.de.element {
         public showProperty(pane: HTMLDivElement): DEEPropertyRoot {
             this.propertyRoot = new DEEPropertyRoot(pane, this.properties);
 
-            new element.DEEPropertyItemInput(this.propertyRoot, "name", "Name", "Name of this element.", v => {
+            new element.DEEPropertyItemInput(this.propertyRoot, "name", "Name", "Name of this element. Set the same name for the same radio group.", v => {
                 this.radioElement.name = v;
                 this.name = v;
             });
@@ -122,6 +122,10 @@ namespace ooo.de.element {
                     optionsCaption: [this.properties.caption]
                 }
             }
+        }
+
+        public onAfterCreate(): void {
+            this.properties.name = "radio-name";
         }
     }
 }

@@ -31,6 +31,7 @@ namespace ooo.de.formatEditor {
                         dee.element.dataset.detype = factory.getType();
                         setOnClickElementEvent(dee);
                         activate(dee);
+                        dee.onAfterCreate();
                     }
                 }
             }, "toolbutton"));
@@ -40,17 +41,21 @@ namespace ooo.de.formatEditor {
     function AddSystemDEE() {
         let toolbarData = document.getElementById("toolbar-data") as HTMLDivElement;
         let toolbarOthers = document.getElementById("toolbar-others") as HTMLDivElement;
-        
+
         // Data elements
         AddDEE(new element.DeInputFactory(), toolbarData);
         AddDEE(new element.DeSelectFactory(), toolbarData);
         AddDEE(new element.DeRadioFactory(), toolbarData);
         AddDEE(new element.DeFileFactory(), toolbarData);
+        AddDEE(new element.DeInputExFactory("date", "Date"), toolbarData);
+        AddDEE(new element.DeInputExFactory("number", "Number"), toolbarData);
+        AddDEE(new element.DeInputExFactory("color", "Color"), toolbarData);
 
         // Other elements
         AddDEE(new element.DeCommandButtonFactory(), toolbarOthers);
         AddDEE(new element.DeTableFactory(), toolbarOthers);
         AddDEE(new element.DeDataViewFactory(), toolbarOthers);
+        AddDEE(new element.DeImageFactory(), toolbarOthers);
     }
     //#endregion
 
@@ -91,13 +96,60 @@ namespace ooo.de.formatEditor {
             htmlID: "commonInfoView"
         }, {
             caption: "Data",
-            name: "data",
-            htmlID: "propertyView"
+            name: "data"
         }, {
             caption: "Style",
             name: "style",
             htmlID: "styleView"
         }]);
+
+        let elementSelectArea = common.addTag(propertyTab.getTabItem("data")!, "div");
+        let propertyArea = common.addTag(propertyTab.getTabItem("data")!, "div");
+        propertyArea.id = "propertyView";
+
+        // Element List
+        let elementsSelectRoot = new element.DEEPropertyRoot(elementSelectArea, {});
+        let elementsSelect = new element.DEEPropertyItemSelect(elementsSelectRoot, "activeElement", [], "Elements", "Element list in this form.", (v) => {
+            let target = element.DEEElementBase.elementList.find(e => e.id == v);
+            if (target) {
+                activate(target);
+            }
+        });
+
+        elementsSelect.select.addEventListener("click", update);
+        elementsSelect.select.addEventListener("keydown", update);
+        elementsSelect.select.addEventListener("change", () => {
+            let id = elementsSelect.select.value;
+            let target = element.DEEElementBase.elementList.find(e => e.id == id);
+            if (target) {
+                activate(target);
+            }
+        });
+
+        async function update() {
+            elementListUpdate();
+            elementsSelect.setOptions(
+                element.DEEElementBase.elementList.map(e => {
+                    return {
+                        value: e.id,
+                        caption: e.properties.name || e.id,
+                        tooltip: e.properties.description || e.properties.name || e.id
+                    }
+                })
+            );
+        }
+    }
+
+    export function elementListUpdate() {
+        let formBody = document.getElementById("formatBody") as HTMLDivElement;
+        for (let i = 0; i < element.DEEElementBase.elementList.length;) {
+            let e = element.DEEElementBase.elementList[i];
+            if (!formBody.querySelector(`*[data-deid="${e.id}"]`)) {
+                element.DEEElementBase.elementList.splice(i, 1);
+            } else {
+                i++
+            }
+        }
     }
     //#endregion
 
@@ -273,6 +325,49 @@ namespace ooo.de.formatEditor {
         // script can't move.
         let modifiedHtmlString = htmlDoc.body.innerHTML;
         formatBody.innerHTML = modifiedHtmlString;
+    }
+
+    export function loadElement(element: HTMLElement) {
+        let defactory = DeeList.find(e => e.getType() == element.dataset.detype);
+        if (defactory) {
+            let dee = defactory.loadElement(element);
+            dee.id = element.dataset.deid;
+            setOnClickElementEvent(dee);
+        }
+    }
+
+    export function refreshElements() {
+        let formatBody = document.getElementById("formatBody") as HTMLDivElement;
+        let htmlElements = formatBody.querySelectorAll("*[data-deid]");
+
+        // Remove deleted element
+        for (let i = 0; i < element.DEEElementBase.elementList.length;) {
+            if (common.isChildOf(element.DEEElementBase.elementList[i].element, formatBody)) {
+                i++;
+            } else {
+                element.DEEElementBase.elementList.splice(i, 1);
+            }
+        }
+
+        // Reset element's id
+        for (let i = 0; i < htmlElements.length; i++) {
+            let htmlElement = htmlElements[i] as HTMLElement;
+            let deid = htmlElement.dataset.deid!;
+
+            let dee = element.DEEElementBase.elementList.find(e => e.id == deid);
+            if (dee) {
+                if (dee.element == htmlElement) {
+                    // The DEE is this element. => Do nothing.
+                } else {
+                    // The item is Copied. => Make new element.
+                    htmlElement.dataset.deid = common.newID();
+                    loadElement(htmlElement);
+                }
+            } else {
+                // The item is not loaded.
+                loadElement(htmlElement);
+            }
+        }
     }
 
     //#endregion

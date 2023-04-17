@@ -12,7 +12,10 @@ namespace ooo.de.formatEditor {
             onChangeSelection();
         });
         formatBody.addEventListener("paste", () => {
-            arrangeTags();
+            setTimeout(() => {
+                refreshElements();
+                arrangeTags();
+            }, 0);
         });
         formatBody.addEventListener("focus", () => {
             arrangeTags();
@@ -334,14 +337,14 @@ namespace ooo.de.formatEditor {
     }
 
     let targetNodes: HTMLElement[] | undefined;
-    function getTargetNodes() {
+    function getTargetNodes(): HTMLElement[] {
         if (!selectionInfo) {
             // check if selection is valid.
             return [];
         } else if (targetNodes == undefined) {
             // check if a range is selected
             if (selectionInfo.startContainer == selectionInfo.endContainer && selectionInfo.startOffset == selectionInfo.endOffset) {
-                return [selectionInfo.startContainer.parentElement];
+                return [selectionInfo.startContainer.parentElement!];
             }
 
             targetNodes = [];

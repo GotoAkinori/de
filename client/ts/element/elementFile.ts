@@ -153,5 +153,9 @@ namespace ooo.de.element {
                 }
             }
         }
+
+        public onAfterCreate(): void {
+            this.properties.name = this.id;
+        }
     }
 }
