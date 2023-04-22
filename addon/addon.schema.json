@@ -1,0 +1,58 @@
+{
+    "type": "object",
+    "required": [
+        "name"
+    ],
+    "additionalProperties": false,
+    "properties": {
+        "$schema": {
+            "type": "string",
+            "title": "Name of the addon.",
+            "pattern": "addon\\.schema\\.json$"
+        },
+        "name": {
+            "type": "string",
+            "title": "Name of the addon.",
+            "pattern": "[a-zA-Z0-9\\-_\\.]+"
+        },
+        "description": {
+            "type": "string",
+            "title": "description of the addon."
+        },
+        "type": {
+            "type": "string",
+            "title": "Type of the addon.",
+            "enum": [
+                "client",
+                "server"
+            ]
+        },
+        "version": {
+            "type": "string",
+            "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+        },
+        "dependency": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            },
+            "uniqueItems": true
+        },
+        "script": {
+            "type": "array",
+            "items": {
+                "type": "string",
+                "pattern": ".js$"
+            },
+            "uniqueItems": true
+        },
+        "style": {
+            "type": "array",
+            "items": {
+                "type": "string",
+                "pattern": ".css$"
+            },
+            "uniqueItems": true
+        }
+    }
+}

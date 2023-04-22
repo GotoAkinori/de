@@ -1,5 +1,3 @@
-import * as fs from "fs";
-
 export function getID(length: number) {
     let id = "";
     for (let i = 0; i < length; i++) {

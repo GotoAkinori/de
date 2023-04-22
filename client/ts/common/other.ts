@@ -7,7 +7,7 @@ namespace ooo.de.common {
         }
         return base64;
     }
-    export function StromgToArrayBuffer(binary_string: string): ArrayBuffer {
+    export function StringToArrayBuffer(binary_string: string): ArrayBuffer {
         let length = binary_string.length;
         let bytes = new Uint8Array(length);
         for (let i = 0; i < length; i++) {
@@ -19,6 +19,6 @@ namespace ooo.de.common {
         return btoa(ArrayBufferToString(array));
     }
     export function Base64ToArrayBuffer(base64: string): ArrayBuffer {
-        return StromgToArrayBuffer(atob(base64));
+        return StringToArrayBuffer(atob(base64));
     }
 }

@@ -52,6 +52,7 @@ namespace ooo.de.formatEditor {
         AddDEE(new element.DeInputExFactory("color", "Color"), toolbarData);
 
         // Other elements
+        AddDEE(new element.DeLinkFactory(), toolbarOthers);
         AddDEE(new element.DeCommandButtonFactory(), toolbarOthers);
         AddDEE(new element.DeTableFactory(), toolbarOthers);
         AddDEE(new element.DeDataViewFactory(), toolbarOthers);
