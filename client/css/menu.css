@@ -1,5 +1,5 @@
 .back {
-    background-color: #0008;
+    background-color: var(--color-dialog-back);
     position: absolute;
     z-index: 1000;
     top: 0px;
@@ -9,22 +9,22 @@
 }
 
 .base {
-    background-color: #224;
+    background-color: var(--color-back);
     position: absolute;
-    border: 2px solid #88A;
+    border: 2px solid var(--color-border);
 }
 
 .menu-item {
-    border: 1px solid #224;
+    border: 1px solid var(--color-border);
     height: 35px;
     padding: 5px;
     user-select: none;
 }
 
 .menu-item:hover {
-    background-color: #448;
+    background-color: var(--color-button-hover);
 }
 
 .menu-item.selected {
-    border: 1px solid #66A;
+    border: 1px solid var(--color-button-hover);
 }

@@ -5,7 +5,7 @@ table {
 }
 
 table.grid td {
-    border: #666 solid 1px;
+    border: var(--color-border) solid 1px;
 }
 
 table td>div {
@@ -18,19 +18,19 @@ table.dataview {
 }
 
 table.dataview thead td {
-    background-color: #008;
-    color: azure;
+    background-color: var(--color-table-head);
+    color: var(--color-font);
     text-align: center;
     font-weight: bold;
 }
 
 table.dataview td {
-    border: #666 solid 1px;
+    border: var(--color-border) solid 1px;
 }
 
 table.dataview button {
     background-color: transparent;
-    border: #448 solid 1px;
+    border: var(--color-button) solid 1px;
     border-radius: 20px;
     width: 28px;
     height: 28px;
@@ -38,7 +38,7 @@ table.dataview button {
 }
 
 table.dataview button:hover {
-    background-color: #88F;
+    background-color: var(--color-button-hover);
 }
 
 table.dataview button img {
@@ -47,10 +47,10 @@ table.dataview button img {
 }
 
 .file button {
-    background-color: #444;
+    background-color: var(--color-button);
     margin: 2px;
 }
 
 .file button:hover {
-    background-color: #888;
+    background-color: var(--color-button-hover);
 }

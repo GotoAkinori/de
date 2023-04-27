@@ -1,0 +1,13 @@
+html {
+    --color-back: #222;
+    --color-element-back: #000;
+    --color-element-line: #FFF;
+    --color-element-active: #6CC;
+    --color-hover: #444;
+    --color-button: #444;
+    --color-button-hover: #888;
+    --color-border: #88A;
+    --color-dialog-back: #0008;
+    --color-font: #FFF;
+    --color-table-head: #006;
+}

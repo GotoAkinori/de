@@ -17,20 +17,20 @@
 }
 
 #dataManager table td {
-    border: 2px solid #888;
+    border: 2px solid var(--color-border);
     user-select: none;
 }
 
 #dataManager table thead td {
-    background-color: #228;
+    background-color: var(--color-table-head);
 }
 
 #dataManager table tbody tr:hover td {
-    background-color: #444;
+    background-color: var(--color-hover);
 }
 
 #dataManager table button:hover {
-    background-color: #666;
+    background-color: var(--color-button-hover);
 }
 
 #dataManager iframe {
@@ -39,16 +39,16 @@
     box-sizing: border-box;
     margin: 0px;
     padding: 0px;
-    border: 2px solid white;
+    border: 2px solid var(--color-border);
 }
 
 #formatTableNew {
     margin: 5px;
-    color: white;
+    color: var(--color-font);
     font-size: 20px;
     background-color: transparent;
 }
 
 #formatTableNew:hover {
-    background-color: #444;
+    background-color: var(--color-hover);
 }

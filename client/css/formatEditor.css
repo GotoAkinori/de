@@ -1,7 +1,7 @@
 html body {
     box-sizing: border-box;
-    background-color: #222;
-    color: white;
+    background-color: var(--color-back);
+    color: var(--color-font);
 }
 
 div {
@@ -10,22 +10,22 @@ div {
 
 .pane {
     position: absolute;
-    border: 2px solid #66A;
+    border: 2px solid var(--color-border);
 }
 
 #toolbar {
-    background-color: #224;
+    background-color: var(--color-table-head);
 }
 
 #toolbar button {
     background-color: transparent;
-    color: white;
+    color: var(--color-font);
     padding: 5px;
     margin: 2px;
 }
 
 #toolbar button:hover {
-    background-color: #448;
+    background-color: var(--color-button-hover);
 }
 
 #toolbar img {
@@ -41,22 +41,22 @@ div {
 }
 
 #propertyViewPane input {
-    background-color: #000;
+    background-color: var(--color-element-back);
     border: none;
-    border-bottom: solid #FFF 1px;
-    color: #FFF;
+    border-bottom: solid var(--color-element-line) 1px;
+    color: var(--color-font);
 }
 
 #propertyViewPane button {
     background-color: transparent;
-    color: white;
+    color: var(--color-font);
     padding: 5px;
     margin: 2px;
 }
 
 #propertyViewPane button:hover {
-    background-color: #448;
-    color: white;
+    background-color: var(--color-button-hover);
+    color: var(--color-font);
     padding: 5px;
     margin: 2px;
 }
@@ -67,25 +67,25 @@ div {
 }
 
 #propertyViewPane select {
-    background-color: #000;
+    background-color: var(--color-element-back);
     border: none;
-    border-bottom: solid #FFF 1px;
-    color: #FFF;
+    border-bottom: solid var(--color-element-line) 1px;
+    color: var(--color-font);
     min-width: 80px;
 }
 
 #propertyViewPane option {
     background-color: transparent;
     border: none;
-    border-bottom: solid #FFF 1px;
-    color: #FFF;
+    border-bottom: solid var(--color-element-line) 1px;
+    color: var(--color-font);
 }
 
 #propertyViewPane option:hover {
-    background-color: #448;
+    background-color: var(--color-button-hover);
     border: none;
-    border-bottom: solid #FFF 1px;
-    color: #FFF;
+    border-bottom: solid var(--color-element-line) 1px;
+    color: var(--color-font);
 }
 
 #propertyViewPane table.prop-datatable {
@@ -93,7 +93,7 @@ div {
 }
 
 #propertyViewPane table.prop-datatable td {
-    border: #888 solid 2px;
+    border: var(--color-border) solid 2px;
     padding: 0px;
 }
 
@@ -115,7 +115,7 @@ div {
     padding: 1px;
     width: 20px;
     height: 20px;
-    border: #444 solid 1px;
+    border: var(--color-button) solid 1px;
     border-radius: 5px;
 }
 
@@ -125,7 +125,7 @@ div {
 }
 
 #propertyViewPane table.prop-datatable thead.prop-head td {
-    background-color: #448;
+    background-color: var(--color-table-head);
     text-align: center;
     font-weight: bold;
 }
@@ -133,17 +133,16 @@ div {
 #commonInfoView {
     width: 100%;
     box-sizing: border-box;
-    border-bottom: dotted 2px #88C;
 }
 
 .toolbutton {
     background-color: transparent;
-    border: 1px solid #88A;
+    border: 1px solid var(--color-border);
     margin: 2px;
 }
 
 .toolbutton:hover {
-    background-color: #448;
+    background-color: var(--color-button-hover);
 }
 
 .prop-base {
@@ -151,11 +150,11 @@ div {
 }
 
 .prop-header {
-    border-top: solid #88A 2px;
-    border-bottom: solid #88A 2px;
+    border-top: solid var(--color-border) 2px;
+    border-bottom: solid var(--color-border) 2px;
     font-weight: bold;
     font-size: 20px;
-    color: white;
+    color: var(--color-font);
     box-sizing: border-box;
     padding: 2px 2px 2px 10px;
 }
@@ -174,12 +173,11 @@ div {
 
 .prop-header button {
     background-color: transparent;
-    border: 1px #AAF solid;
+    border: 1px var(--color-border) solid;
     margin: 5px;
     height: 22px;
     width: 22px;
     padding: 2px;
-    color: #AAF;
     float: right;
     background-image: url("../image/upArrow.svg");
     background-size: cover;
@@ -190,7 +188,7 @@ div {
 }
 
 .prop-header button:hover {
-    background-color: #66C;
+    background-color: var(--color-button-hover);
 }
 
 .prop-header button.open {
